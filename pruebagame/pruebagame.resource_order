@@ -1,0 +1,16 @@
+{
+  "FolderOrderSettings":[
+    {"name":"Objetos","order":14,"path":"folders/Objetos.yy",},
+    {"name":"rooms","order":13,"path":"folders/rooms.yy",},
+    {"name":"sprites","order":12,"path":"folders/sprites.yy",},
+  ],
+  "ResourceOrderSettings":[
+    {"name":"pared","order":1,"path":"objects/pared/pared.yy",},
+    {"name":"pendejo","order":2,"path":"objects/pendejo/pendejo.yy",},
+    {"name":"pendejo_arriba","order":1,"path":"sprites/pendejo_arriba/pendejo_arriba.yy",},
+    {"name":"pendejo_derecha","order":2,"path":"sprites/pendejo_derecha/pendejo_derecha.yy",},
+    {"name":"pendejo_idle","order":5,"path":"sprites/pendejo_idle/pendejo_idle.yy",},
+    {"name":"pendejo_izquierda","order":3,"path":"sprites/pendejo_izquierda/pendejo_izquierda.yy",},
+    {"name":"Sprite2","order":4,"path":"sprites/Sprite2/Sprite2.yy",},
+  ],
+}
