@@ -19,7 +19,7 @@
   "height":16,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"2553da86-a7f8-499b-aba4-cd2e03fd55d8","blendMode":0,"displayName":"default","isLocked":false,"name":"2553da86-a7f8-499b-aba4-cd2e03fd55d8","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"2553da86-a7f8-499b-aba4-cd2e03fd55d8","blendMode":0,"displayName":"default","isLocked":false,"name":"2553da86-a7f8-499b-aba4-cd2e03fd55d8","opacity":55.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"Sprite2",
   "nineSlice":null,

@@ -1,9 +1,9 @@
 {
   "$GMObject":"",
-  "%Name":"pared",
+  "%Name":"colision",
   "eventList":[],
   "managed":true,
-  "name":"pared",
+  "name":"colision",
   "overriddenProperties":[],
   "parent":{
     "name":"Objetos",
@@ -32,5 +32,5 @@
     "path":"sprites/Sprite2/Sprite2.yy",
   },
   "spriteMaskId":null,
-  "visible":true,
+  "visible":false,
 }
