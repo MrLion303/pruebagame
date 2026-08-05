@@ -1,16 +1,19 @@
 {
   "$GMObject":"",
-  "%Name":"colision",
-  "eventList":[],
+  "%Name":"obj_player",
+  "eventList":[
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+  ],
   "managed":true,
-  "name":"colision",
+  "name":"obj_player",
   "overriddenProperties":[],
   "parent":{
     "name":"Objetos",
     "path":"folders/Objetos.yy",
   },
   "parentObjectId":null,
-  "persistent":false,
+  "persistent":true,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
   "physicsFriction":0.2,
@@ -28,9 +31,9 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_colision",
-    "path":"sprites/spr_colision/spr_colision.yy",
+    "name":"pendejo_abajo",
+    "path":"sprites/pendejo_abajo/pendejo_abajo.yy",
   },
   "spriteMaskId":null,
-  "visible":false,
+  "visible":true,
 }

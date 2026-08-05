@@ -1,17 +1,24 @@
 {
   "FolderOrderSettings":[
-    {"name":"grupo1","order":16,"path":"folders/grupo1.yy",},
+    {"name":"admin obj","order":16,"path":"folders/admin obj.yy",},
     {"name":"Objetos","order":14,"path":"folders/Objetos.yy",},
     {"name":"rooms","order":13,"path":"folders/rooms.yy",},
+    {"name":"room_sprites","order":4,"path":"folders/rooms/room_sprites.yy",},
+    {"name":"sprites_funcion","order":18,"path":"folders/sprites_funcion.yy",},
     {"name":"sprites","order":12,"path":"folders/sprites.yy",},
   ],
   "ResourceOrderSettings":[
     {"name":"colision","order":1,"path":"objects/colision/colision.yy",},
-    {"name":"pendejo","order":2,"path":"objects/pendejo/pendejo.yy",},
-    {"name":"escuela_room","order":1,"path":"sprites/escuela_room/escuela_room.yy",},
+    {"name":"game","order":5,"path":"objects/game/game.yy",},
+    {"name":"obj_player","order":2,"path":"objects/obj_player/obj_player.yy",},
+    {"name":"obj_warp_block","order":3,"path":"objects/obj_warp_block/obj_warp_block.yy",},
+    {"name":"obj_warp","order":4,"path":"objects/obj_warp/obj_warp.yy",},
+    {"name":"pasillo_school","order":2,"path":"rooms/pasillo_school/pasillo_school.yy",},
+    {"name":"pasillo_escuela","order":1,"path":"sprites/pasillo_escuela/pasillo_escuela.yy",},
     {"name":"pendejo_arriba","order":1,"path":"sprites/pendejo_arriba/pendejo_arriba.yy",},
     {"name":"pendejo_derecha","order":2,"path":"sprites/pendejo_derecha/pendejo_derecha.yy",},
     {"name":"pendejo_izquierda","order":3,"path":"sprites/pendejo_izquierda/pendejo_izquierda.yy",},
-    {"name":"Sprite2","order":4,"path":"sprites/Sprite2/Sprite2.yy",},
+    {"name":"spr_warp_transition","order":2,"path":"sprites/spr_warp_transition/spr_warp_transition.yy",},
+    {"name":"spr_warp","order":1,"path":"sprites/spr_warp/spr_warp.yy",},
   ],
 }
