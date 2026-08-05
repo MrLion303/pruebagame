@@ -1,6 +1,7 @@
 {
   "FolderOrderSettings":[
     {"name":"admin obj","order":16,"path":"folders/admin obj.yy",},
+    {"name":"scripts","order":19,"path":"folders/scripts.yy",},
     {"name":"Objetos","order":14,"path":"folders/Objetos.yy",},
     {"name":"rooms","order":13,"path":"folders/rooms.yy",},
     {"name":"room_sprites","order":4,"path":"folders/rooms/room_sprites.yy",},
@@ -9,7 +10,7 @@
   ],
   "ResourceOrderSettings":[
     {"name":"colision","order":1,"path":"objects/colision/colision.yy",},
-    {"name":"game","order":5,"path":"objects/game/game.yy",},
+    {"name":"game","order":1,"path":"objects/game/game.yy",},
     {"name":"obj_player","order":2,"path":"objects/obj_player/obj_player.yy",},
     {"name":"obj_warp_block","order":3,"path":"objects/obj_warp_block/obj_warp_block.yy",},
     {"name":"obj_warp","order":4,"path":"objects/obj_warp/obj_warp.yy",},
