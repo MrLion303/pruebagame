@@ -120,3 +120,18 @@ if (!movimiento)
 {
     image_index = 0;
 }
+
+//keep track of direction facing
+if(sprite_index = pendejo_abajo){
+	facing_direction = 2
+}
+if(sprite_index = pendejo_arriba){
+	facing_direction = 3
+}
+if(sprite_index = pendejo_derecha){
+	facing_direction = 0
+}
+
+if(sprite_index = pendejo_izquierda){
+	facing_direction = 1
+}
