@@ -1,25 +1,34 @@
 depth = -9999;
 
-//textbox parametros
+// Textbox parámetros
 textbox_width = 288;
-textbox_heigh = 76;
-border = 8;
-line_sep = 12;
-line_width = textbox_width - (border * 2);
+textbox_heigh = 95; 
+border = 12; 
+line_sep = 26; 
+
+line_width = (textbox_width - (border * 2)) / (2/3);
+
 txtb_spr = spr_textbox;
 txtb_img = 0;
 txtb_img_spd = 3/30;
 
-//texto
+// Variables de control de páginas y animación
 page = 0;
 page_number = 0;
-text[0] = "Hola, ¿Que tal estas? que bueno que te encuentras bien jeje.";
-text[1] = "Hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola hola";
-text[2] = "suputamadre";
-text[3] = "suputamadre que pasa";
-text[4] = "es un chingo de nopor XDxdX";
-text_lenght[0] = string_length(text[0]);
+text = [""];         
+text_lenght = [0];    
+text_color = [c_white]; 
 draw_char = 0;
 text_spd = 1;
-
 setup = false;
+
+txtb_spr_w = sprite_get_width(txtb_spr);
+txtb_spr_h = sprite_get_height(txtb_spr);
+
+// Opciones
+option[0] = "";
+option_link_id[0] = -1;
+option_pos = 0;
+option_number = 0;
+
+text_id = "default";

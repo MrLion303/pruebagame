@@ -1,9 +1,8 @@
 // Reiniciar movimiento
 movimiento = false;
 
-
-// Si NO existe el pauser, permitir movimiento
-if (!instance_exists(obj_pauser))
+// Si NO existe el pauser Y TAMPOCO existe la caja de diálogo, permitir movimiento
+if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox))
 {
     // Correr
     if (keyboard_check(ord("X")))
@@ -14,7 +13,6 @@ if (!instance_exists(obj_pauser))
     {
         velocidad = 4;
     }
-
 
     // Derecha
     if (keyboard_check(vk_right))
@@ -29,7 +27,6 @@ if (!instance_exists(obj_pauser))
         }
     }
 
-
     // Izquierda
     if (keyboard_check(vk_left))
     {
@@ -42,7 +39,6 @@ if (!instance_exists(obj_pauser))
             movimiento = true;
         }
     }
-
 
     // Arriba
     if (keyboard_check(vk_up))
@@ -57,7 +53,6 @@ if (!instance_exists(obj_pauser))
         }
     }
 
-
     // Abajo
     if (keyboard_check(vk_down))
     {
@@ -71,7 +66,6 @@ if (!instance_exists(obj_pauser))
         }
     }
 }
-
 
 // Aplicar dirección del warp
 switch(face)
@@ -93,7 +87,6 @@ switch(face)
         break;
 }
 
-
 // Cambiar sprite
 switch (direccion)
 {
@@ -114,24 +107,22 @@ switch (direccion)
         break;
 }
 
-
 // Quieto
 if (!movimiento)
 {
     image_index = 0;
 }
 
-//keep track of direction facing
-if(sprite_index = pendejo_abajo){
-	facing_direction = 2
+// Keep track of direction facing
+if (sprite_index == pendejo_abajo) {
+    facing_direction = 2;
 }
-if(sprite_index = pendejo_arriba){
-	facing_direction = 3
+if (sprite_index == pendejo_arriba) {
+    facing_direction = 3;
 }
-if(sprite_index = pendejo_derecha){
-	facing_direction = 0
+if (sprite_index == pendejo_derecha) {
+    facing_direction = 0;
 }
-
-if(sprite_index = pendejo_izquierda){
-	facing_direction = 1
+if (sprite_index == pendejo_izquierda) {
+    facing_direction = 1;
 }

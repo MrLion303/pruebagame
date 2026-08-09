@@ -1,15 +1,16 @@
 {
   "$GMObject":"",
-  "%Name":"obj_npc_1",
+  "%Name":"obj_speakblock",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_npc_1",
+  "name":"obj_speakblock",
   "overriddenProperties":[],
   "parent":{
-    "name":"NPC'S",
-    "path":"folders/NPC'S.yy",
+    "name":"Sistema de Dialogos",
+    "path":"folders/Sistema de Dialogos.yy",
   },
   "parentObjectId":null,
   "persistent":false,
@@ -30,8 +31,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_npc_1",
-    "path":"sprites/spr_npc_1/spr_npc_1.yy",
+    "name":"spr_speakblock",
+    "path":"sprites/spr_speakblock/spr_speakblock.yy",
   },
   "spriteMaskId":null,
   "visible":true,

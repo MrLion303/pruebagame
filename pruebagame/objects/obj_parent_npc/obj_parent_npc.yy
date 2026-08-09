@@ -1,15 +1,15 @@
 {
   "$GMObject":"",
-  "%Name":"obj_npc_1",
+  "%Name":"obj_parent_npc",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_npc_1",
+  "name":"obj_parent_npc",
   "overriddenProperties":[],
   "parent":{
-    "name":"NPC'S",
-    "path":"folders/NPC'S.yy",
+    "name":"admin obj",
+    "path":"folders/admin obj.yy",
   },
   "parentObjectId":null,
   "persistent":false,
@@ -29,10 +29,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"spr_npc_1",
-    "path":"sprites/spr_npc_1/spr_npc_1.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }
