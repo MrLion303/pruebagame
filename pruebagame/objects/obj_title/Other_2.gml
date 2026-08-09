@@ -54,3 +54,8 @@ if(global.start_room = 2){
 	global.start_room = toriel_salon
 	
 }
+if(global.start_room = 3){
+
+	global.start_room = huevo
+	
+}
