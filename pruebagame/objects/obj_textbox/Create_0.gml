@@ -28,6 +28,7 @@ for(var i = 0; i < 500; i++) {
     col_2[i, 0] = c_white;
     col_3[i, 0] = c_white;
     col_4[i, 0] = c_white;
+    text_effect[i, 0] = "none";
 }
 
 draw_char = 0;

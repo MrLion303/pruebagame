@@ -23,12 +23,13 @@ function scr_set_defaults_for_text() {
     }
     text_sound[page_number] = snd_text;
 
-    // Inicializar de forma segura los 4 colores para CADA página nueva que se cree
+    // Inicializar de forma segura los colores y efectos para CADA página nueva
     for (var c = 0; c < 500; c++) {
         col_1[c, page_number] = c_white;
         col_2[c, page_number] = c_white;
         col_3[c, page_number] = c_white;
         col_4[c, page_number] = c_white;
+        text_effect[c, page_number] = "none";
     }
     
     line_break_pos[0, page_number] = 999;
@@ -72,7 +73,7 @@ function scr_text(_text, _color = c_white, _speaker_spr = noone, _sound = snd_te
     }
 }
 
-// -------- TEXT VFX CORREGIDO --------
+// -------- TEXT VFX (COLOR) --------
 function scr_text_color(_start, _end, _col1, _col2, _col3, _col4){
     with (obj_textbox) {
         var _len = string_length(text[page_number - 1]);
@@ -112,6 +113,52 @@ function scr_text_multi(_t1, _c1, _t2, _c2) {
         
         page_number++;
         text_lenght[page_number - 1] = string_length(text[page_number - 1]);
+    }
+}
+
+// -------- NUEVOS EFECTOS DE TEXTO (SHAKE, WAVE, BOUNCE) --------
+function scr_text_shake(_start, _end) {
+    with (obj_textbox) {
+        var _len = string_length(text[page_number - 1]);
+        var _safe_end = min(_end, _len - 1);
+        
+        if (!variable_instance_exists(id, "text_effect")) {
+            text_effect = [];
+        }
+        
+        for (var c = _start; c <= _safe_end; c++) {
+            text_effect[c, page_number - 1] = "shake";
+        }
+    }
+}
+
+function scr_text_wave(_start, _end) {
+    with (obj_textbox) {
+        var _len = string_length(text[page_number - 1]);
+        var _safe_end = min(_end, _len - 1);
+        
+        if (!variable_instance_exists(id, "text_effect")) {
+            text_effect = [];
+        }
+        
+        for (var c = _start; c <= _safe_end; c++) {
+            text_effect[c, page_number - 1] = "wave";
+        }
+    }
+}
+
+function scr_text_bounce(_start, _end) {
+    with (obj_textbox) {
+        var _len = string_length(text[page_number - 1]);
+        var _safe_end = min(_end, _len - 1);
+        
+        if (!variable_instance_exists(id, "text_effect")) {
+            text_effect = [];
+        }
+        
+        for (var c = _start; c <= _safe_end; c++) {
+            text_effect[c, page_number - 1] = "bounce";
+        }
     }
 }
 

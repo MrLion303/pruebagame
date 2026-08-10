@@ -1,8 +1,8 @@
 accept_key = keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter);
 skip_key = keyboard_check_pressed(ord("X")) || keyboard_check_pressed(vk_shift);
 
-// Nueva tecla para saltar todo el diálogo rápido al mantener presionada la C
 var _fast_skip_key = keyboard_check(ord("C"));
+var _is_decision = (variable_instance_exists(id, "page_number") && variable_instance_exists(id, "option_number") && option_number > 0 && page == page_number - 1);
 
 if (!variable_instance_exists(id, "page_number") || page_number <= 0) exit;
 if (!variable_instance_exists(id, "text") || !is_array(text)) exit;
@@ -120,7 +120,6 @@ if (draw_char < text_lenght[page])
     var _current_char_checking = string_char_at(text[page], floor(draw_char));
     var _is_punctuation = (_current_char_checking == "." || _current_char_checking == "," || _current_char_checking == "!" || _current_char_checking == "?");
     
-    // Velocidad máxima si se presiona C
     var _actual_speed = _fast_skip_key ? 999 : (_is_punctuation ? 0.08 : text_spd);
     
     draw_char += _actual_speed;
@@ -154,7 +153,7 @@ if (draw_char < text_lenght[page])
         draw_char = text_lenght[page];
     }
 }
-else if (accept_key || _fast_skip_key)
+else if (accept_key || (_fast_skip_key && !_is_decision))
 {
     if (draw_char >= text_lenght[page]) {
         if page < page_number - 1
@@ -229,8 +228,9 @@ if (variable_instance_exists(id, "option_number") && option_number > 0)
     }
 }
 
-// Dibujar el texto carácter por carácter
+// Dibujar el texto carácter por carácter con colores y efectos aplicados
 draw_set_font(global.font_main);
+var _time = get_timer() / 100000;
 
 for (var c = 0; c < draw_char; c++)
 {
@@ -254,6 +254,29 @@ for (var c = 0; c < draw_char; c++)
             }
         }
         
-        draw_text_transformed_color(char_x[c, page], char_y[c, page], char[c, page], _txt_scale, _txt_scale, 0, _c1, _c2, _c3, _c4, 1);
+        var _draw_x = char_x[c, page];
+        var _draw_y = char_y[c, page];
+        
+        var _eff = "none";
+        if (variable_instance_exists(id, "text_effect")) {
+            try {
+                _eff = text_effect[c, page];
+            } catch(_e) {
+                _eff = "none";
+            }
+        }
+        
+        if (_eff == "shake") {
+            _draw_x += random_range(-1, 1);
+            _draw_y += random_range(-1, 1);
+        }
+        else if (_eff == "wave") {
+            _draw_y += sin((_time + c) * 0.5) * 3;
+        }
+        else if (_eff == "bounce") {
+            _draw_y -= abs(sin((_time + c) * 0.8)) * 4;
+        }
+        
+        draw_text_transformed_color(_draw_x, _draw_y, char[c, page], _txt_scale, _txt_scale, 0, _c1, _c2, _c3, _c4, 1);
     }
 }

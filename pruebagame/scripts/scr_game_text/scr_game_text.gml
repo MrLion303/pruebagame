@@ -1,5 +1,10 @@
 // pasar renglon \n
 
+//--------------ANIMACIONES----------------
+// scr_text_wave hace el movimiento de ola
+// scr_text_shake hace que se sacuda
+// scr_text_bounce hace que reboten las letras
+
 // @param text_id
 function scr_game_text(_text_id){
 	
@@ -21,6 +26,7 @@ function scr_game_text(_text_id){
 	            scr_text("El... keke? Oh! Claro que me gusta!",c_white, spr_noelle_normal, snd_noelle);
 					scr_text_color(6, 10, c_white, c_white, c_yellow, c_yellow); scr_text_color(29, 34, c_white, c_white, c_green, c_green);
 				scr_text("VIVAAAAAAAAAAA!!!");
+					scr_text_wave(0, 16);
 	            break;
             
 			  case "npc 1 - no":
