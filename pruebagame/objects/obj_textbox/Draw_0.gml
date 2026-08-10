@@ -117,13 +117,11 @@ if (draw_char < text_lenght[page])
     var _current_char_checking = string_char_at(text[page], floor(draw_char));
     var _is_punctuation = (_current_char_checking == "." || _current_char_checking == "," || _current_char_checking == "!" || _current_char_checking == "?");
     
-    // Pausa un pelín más larga en los signos de puntuación (velocidad reducida a 0.08)
     var _actual_speed = _is_punctuation ? 0.08 : text_spd;
     
     draw_char += _actual_speed;
     draw_char = clamp(draw_char, 0, text_lenght[page]);
     
-    // Reproducción de sonido de voz (congelando el timer durante la pausa de puntuación)
     if (floor(draw_char) > 0 && floor(draw_char) <= text_lenght[page])
     {
         var _char_to_speak = string_char_at(text[page], floor(draw_char));
@@ -227,15 +225,31 @@ if (variable_instance_exists(id, "option_number") && option_number > 0)
     }
 }
 
+// Dibujar el texto carácter por carácter de forma totalmente blindada
 draw_set_font(global.font_main);
-var _current_color = c_white;
-if (variable_instance_exists(id, "text_color") && is_array(text_color) && page < array_length(text_color)) {
-    _current_color = text_color[page];
-}
 
 for (var c = 0; c < draw_char; c++)
 {
     if (char_x[c, page] != -9999) {
-        draw_text_transformed_color(char_x[c, page], char_y[c, page], char[c, page], _txt_scale, _txt_scale, 0, _current_color, _current_color, _current_color, _current_color, 1);
+        var _c1 = c_white;
+        var _c2 = c_white;
+        var _c3 = c_white;
+        var _c4 = c_white;
+        
+        if (variable_instance_exists(id, "col_1")) {
+            try {
+                _c1 = col_1[c, page];
+                _c2 = col_2[c, page];
+                _c3 = col_3[c, page];
+                _c4 = col_4[c, page];
+            } catch(_exception) {
+                _c1 = c_white;
+                _c2 = c_white;
+                _c3 = c_white;
+                _c4 = c_white;
+            }
+        }
+        
+        draw_text_transformed_color(char_x[c, page], char_y[c, page], char[c, page], _txt_scale, _txt_scale, 0, _c1, _c2, _c3, _c4, 1);
     }
 }

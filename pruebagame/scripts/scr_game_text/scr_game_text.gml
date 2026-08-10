@@ -40,6 +40,7 @@ function scr_game_text(_text_id){
         case "npc 2":
             scr_text("Soy el original");
             scr_text("Ayudame a encontrar, por favor, a mi madre");
+				scr_text_color(34, 42, c_white, c_white, c_yellow, c_yellow);
             break;
         
         case "npc 3":

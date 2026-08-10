@@ -22,6 +22,14 @@ function scr_set_defaults_for_text() {
         array_resize(text_sound, page_number + 1);
     }
     text_sound[page_number] = snd_text;
+
+    // Inicializar de forma segura los 4 colores para la página actual (hasta 500 caracteres)
+    for (var c = 0; c < 500; c++) {
+        col_1[c, page_number] = c_white;
+        col_2[c, page_number] = c_white;
+        col_3[c, page_number] = c_white;
+        col_4[c, page_number] = c_white;
+    }
     
     line_break_pos[0, page_number] = 999;
     line_break_num[page_number] = 0;
@@ -54,7 +62,6 @@ function scr_text(_text, _color = c_white, _speaker_spr = noone, _sound = snd_te
         }
         speaker_sprite[page_number] = _speaker_spr;
         
-        // Asignar el sonido correspondiente (si no lleva sprite o viene vacío, usa snd_text por defecto)
         if (!variable_instance_exists(id, "text_sound")) {
             text_sound = array_create(page_number + 1, snd_text);
         }
@@ -73,6 +80,23 @@ function scr_text(_text, _color = c_white, _speaker_spr = noone, _sound = snd_te
         
         page_number++;
         text_lenght[page_number - 1] = string_length(text[page_number - 1]);
+    }
+}
+
+//--------text VFX--------
+/// @param 1st_char
+/// @param last_char
+/// @param col1
+/// @param col2
+/// @param col3
+/// @param col4
+function scr_text_color(_start, _end, _col1, _col2, _col3, _col4){
+    for (var c = _start; c <= _end; c++)
+    {
+        col_1[c, page_number-1] = _col1;
+        col_2[c, page_number-1] = _col2;
+        col_3[c, page_number-1] = _col3;
+        col_4[c, page_number-1] = _col4;
     }
 }
 
