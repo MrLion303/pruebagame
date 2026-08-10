@@ -23,7 +23,7 @@ function scr_set_defaults_for_text() {
     }
     text_sound[page_number] = snd_text;
 
-    // Inicializar de forma segura los 4 colores para la página actual (hasta 500 caracteres)
+    // Inicializar de forma segura los 4 colores para CADA página nueva que se cree
     for (var c = 0; c < 500; c++) {
         col_1[c, page_number] = c_white;
         col_2[c, page_number] = c_white;
@@ -44,6 +44,8 @@ function scr_set_defaults_for_text() {
 function scr_text(_text, _color = c_white, _speaker_spr = noone, _sound = snd_text){
     with (obj_textbox)
     {
+        scr_set_defaults_for_text();
+        
         text[page_number] = _text;
         
         if (!variable_instance_exists(id, "text_color")) {
@@ -54,20 +56,7 @@ function scr_text(_text, _color = c_white, _speaker_spr = noone, _sound = snd_te
         }
         text_color[page_number] = _color;
         
-        if (!variable_instance_exists(id, "speaker_sprite")) {
-            speaker_sprite = array_create(page_number + 1, noone);
-        }
-        if (array_length(speaker_sprite) <= page_number) {
-            array_resize(speaker_sprite, page_number + 1);
-        }
         speaker_sprite[page_number] = _speaker_spr;
-        
-        if (!variable_instance_exists(id, "text_sound")) {
-            text_sound = array_create(page_number + 1, snd_text);
-        }
-        if (array_length(text_sound) <= page_number) {
-            array_resize(text_sound, page_number + 1);
-        }
         text_sound[page_number] = (_speaker_spr == noone || _speaker_spr < 0) ? snd_text : _sound;
         
         if (!variable_instance_exists(id, "is_multi_color")) {
@@ -78,32 +67,27 @@ function scr_text(_text, _color = c_white, _speaker_spr = noone, _sound = snd_te
         }
         is_multi_color[page_number] = false;
         
+        text_lenght[page_number] = string_length(_text);
         page_number++;
-        text_lenght[page_number - 1] = string_length(text[page_number - 1]);
     }
 }
 
-//--------text VFX--------
-/// @param 1st_char
-/// @param last_char
-/// @param col1
-/// @param col2
-/// @param col3
-/// @param col4
+// -------- TEXT VFX CORREGIDO --------
 function scr_text_color(_start, _end, _col1, _col2, _col3, _col4){
-    for (var c = _start; c <= _end; c++)
-    {
-        col_1[c, page_number-1] = _col1;
-        col_2[c, page_number-1] = _col2;
-        col_3[c, page_number-1] = _col3;
-        col_4[c, page_number-1] = _col4;
+    with (obj_textbox) {
+        var _len = string_length(text[page_number - 1]);
+        var _safe_end = min(_end, _len - 1);
+        
+        for (var c = _start; c <= _safe_end; c++)
+        {
+            col_1[c, page_number - 1] = _col1;
+            col_2[c, page_number - 1] = _col2;
+            col_3[c, page_number - 1] = _col3;
+            col_4[c, page_number - 1] = _col4;
+        }
     }
 }
 
-/// @param text1
-/// @param color1
-/// @param text2
-/// @param color2
 function scr_text_multi(_t1, _c1, _t2, _c2) {
     with (obj_textbox) {
         text[page_number] = _t1 + _t2; 
@@ -131,15 +115,12 @@ function scr_text_multi(_t1, _c1, _t2, _c2) {
     }
 }
 
-/// @param option 
-/// @param link_id
 function scr_option(_option, _link_id) {
     option[option_number] = _option;
     option_link_id[option_number] = _link_id;
     option_number++;
 }
 
-/// @param text_id
 function create_textbox(_text_id) {
     var _txt = instance_create_depth(0, 0, -9999, obj_textbox);
     with(_txt)

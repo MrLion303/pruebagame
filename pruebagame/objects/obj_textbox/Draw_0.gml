@@ -1,6 +1,9 @@
 accept_key = keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter);
 skip_key = keyboard_check_pressed(ord("X")) || keyboard_check_pressed(vk_shift);
 
+// Nueva tecla para saltar todo el diálogo rápido al mantener presionada la C
+var _fast_skip_key = keyboard_check(ord("C"));
+
 if (!variable_instance_exists(id, "page_number") || page_number <= 0) exit;
 if (!variable_instance_exists(id, "text") || !is_array(text)) exit;
 
@@ -117,7 +120,8 @@ if (draw_char < text_lenght[page])
     var _current_char_checking = string_char_at(text[page], floor(draw_char));
     var _is_punctuation = (_current_char_checking == "." || _current_char_checking == "," || _current_char_checking == "!" || _current_char_checking == "?");
     
-    var _actual_speed = _is_punctuation ? 0.08 : text_spd;
+    // Velocidad máxima si se presiona C
+    var _actual_speed = _fast_skip_key ? 999 : (_is_punctuation ? 0.08 : text_spd);
     
     draw_char += _actual_speed;
     draw_char = clamp(draw_char, 0, text_lenght[page]);
@@ -127,30 +131,30 @@ if (draw_char < text_lenght[page])
         var _char_to_speak = string_char_at(text[page], floor(draw_char));
         if (_char_to_speak != " ")
         {
-            if (!_is_punctuation)
+            if (!_is_punctuation && !_fast_skip_key)
             {
                 text_sound_timer++;
             }
             
-            if (text_sound_timer >= text_sound_delay)
+            if (text_sound_timer >= text_sound_delay || _fast_skip_key)
             {
                 text_sound_timer = 0;
                 
                 var _current_sound = (page < array_length(text_sound) && text_sound[page] != undefined) ? text_sound[page] : snd_text;
                 
-                if (audio_exists(_current_sound)) {
+                if (audio_exists(_current_sound) && !_fast_skip_key) {
                     audio_play_sound(_current_sound, 1, false);
                 }
             }
         }
     }
     
-    if skip_key
+    if (skip_key || _fast_skip_key)
     {
         draw_char = text_lenght[page];
     }
 }
-else if accept_key
+else if (accept_key || _fast_skip_key)
 {
     if (draw_char >= text_lenght[page]) {
         if page < page_number - 1
@@ -225,7 +229,7 @@ if (variable_instance_exists(id, "option_number") && option_number > 0)
     }
 }
 
-// Dibujar el texto carácter por carácter de forma totalmente blindada
+// Dibujar el texto carácter por carácter
 draw_set_font(global.font_main);
 
 for (var c = 0; c < draw_char; c++)

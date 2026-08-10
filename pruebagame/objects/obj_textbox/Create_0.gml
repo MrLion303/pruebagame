@@ -23,7 +23,6 @@ char[0, 0] = "";
 char_x[0, 0] = 0;
 char_y[0, 0] = 0;
 
-// Inicialización de los 4 colores para hasta 500 caracteres
 for(var i = 0; i < 500; i++) {
     col_1[i, 0] = c_white;
     col_2[i, 0] = c_white;
