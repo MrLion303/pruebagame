@@ -14,29 +14,99 @@ if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox))
         velocidad = 4;
     }
 
-    // Derecha
+    // Derecha (Subida y bajada automática de rampas)
     if (keyboard_check(vk_right))
     {
         direccion = "derecha";
         face = RIGHT;
+
+        var _max_slope = 4; // Altura máxima que puede subir o bajar automáticamente
 
         if (!place_meeting(x + velocidad, y, colision))
         {
             x += velocidad;
             movimiento = true;
         }
+        else
+        {
+            var _sloped = false;
+            
+            // 1. Intentar subir (rampa hacia arriba)
+            for (var _i = 1; _i <= _max_slope; _i++)
+            {
+                if (!place_meeting(x + velocidad, y - _i, colision))
+                {
+                    y -= _i; 
+                    x += velocidad; 
+                    movimiento = true;
+                    _sloped = true;
+                    break;
+                }
+            }
+            
+            // 2. Si no pudo subir, intentar bajar (rampa hacia abajo / superior)
+            if (!_sloped)
+            {
+                for (var _i = 1; _i <= _max_slope; _i++)
+                {
+                    if (!place_meeting(x + velocidad, y + _i, colision))
+                    {
+                        y += _i; 
+                        x += velocidad; 
+                        movimiento = true;
+                        _sloped = true;
+                        break;
+                    }
+                }
+            }
+        }
     }
 
-    // Izquierda
+    // Izquierda (Subida y bajada automática de rampas)
     if (keyboard_check(vk_left))
     {
         direccion = "izquierda";
         face = LEFT;
 
+        var _max_slope = 4;
+
         if (!place_meeting(x - velocidad, y, colision))
         {
             x -= velocidad;
             movimiento = true;
+        }
+        else
+        {
+            var _sloped = false;
+            
+            // 1. Intentar subir
+            for (var _i = 1; _i <= _max_slope; _i++)
+            {
+                if (!place_meeting(x - velocidad, y - _i, colision))
+                {
+                    y -= _i; 
+                    x -= velocidad; 
+                    movimiento = true;
+                    _sloped = true;
+                    break;
+                }
+            }
+            
+            // 2. Intentar bajar
+            if (!_sloped)
+            {
+                for (var _i = 1; _i <= _max_slope; _i++)
+                {
+                    if (!place_meeting(x - velocidad, y + _i, colision))
+                    {
+                        y += _i; 
+                        x -= velocidad; 
+                        movimiento = true;
+                        _sloped = true;
+                        break;
+                    }
+                }
+            }
         }
     }
 

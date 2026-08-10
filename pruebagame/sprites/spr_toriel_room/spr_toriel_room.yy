@@ -1,10 +1,10 @@
 {
   "$GMSprite":"v2",
-  "%Name":"pasillo_escuela",
+  "%Name":"spr_toriel_room",
   "bboxMode":0,
-  "bbox_bottom":419,
+  "bbox_bottom":239,
   "bbox_left":0,
-  "bbox_right":839,
+  "bbox_right":419,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -12,16 +12,16 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"v1","%Name":"7ddf5cbe-de28-49e1-ac8c-c9a618670630","name":"7ddf5cbe-de28-49e1-ac8c-c9a618670630","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"eb7134c5-6a6d-4749-bc49-fa0cca8c248c","name":"eb7134c5-6a6d-4749-bc49-fa0cca8c248c","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
-  "height":420,
+  "height":240,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"eca757eb-389e-4d53-b517-d4acd1072314","blendMode":0,"displayName":"default","isLocked":false,"name":"eca757eb-389e-4d53-b517-d4acd1072314","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"83fbc944-dcf5-435b-8679-ca746feef5d1","blendMode":0,"displayName":"default","isLocked":false,"name":"83fbc944-dcf5-435b-8679-ca746feef5d1","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
-  "name":"pasillo_escuela",
+  "name":"spr_toriel_room",
   "nineSlice":null,
   "origin":4,
   "parent":{
@@ -33,7 +33,7 @@
   "resourceVersion":"2.0",
   "sequence":{
     "$GMSequence":"v1",
-    "%Name":"pasillo_escuela",
+    "%Name":"spr_toriel_room",
     "autoRecord":true,
     "backdropHeight":768,
     "backdropImageOpacity":0.5,
@@ -57,7 +57,7 @@
       "resourceType":"KeyframeStore<MomentsEventKeyframe>",
       "resourceVersion":"2.0",
     },
-    "name":"pasillo_escuela",
+    "name":"spr_toriel_room",
     "playback":1,
     "playbackSpeed":0.0,
     "playbackSpeedType":0,
@@ -69,14 +69,14 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"7ddf5cbe-de28-49e1-ac8c-c9a618670630","path":"sprites/pasillo_escuela/pasillo_escuela.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"7c9c9ebf-04a2-4c73-89c0-8438989f1041","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"eb7134c5-6a6d-4749-bc49-fa0cca8c248c","path":"sprites/spr_toriel_room/spr_toriel_room.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"c9ce82c8-f207-4770-9f47-e2a3f99a3f4f","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,
     "volume":1.0,
-    "xorigin":420,
-    "yorigin":210,
+    "xorigin":210,
+    "yorigin":120,
   },
   "swatchColours":null,
   "swfPrecision":0.5,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":840,
+  "width":420,
 }

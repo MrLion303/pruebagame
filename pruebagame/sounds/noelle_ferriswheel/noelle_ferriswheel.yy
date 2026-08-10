@@ -1,6 +1,6 @@
 {
   "$GMSound":"v2",
-  "%Name":"mus_birdnoise",
+  "%Name":"noelle_ferriswheel",
   "audioGroupId":{
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
@@ -10,9 +10,9 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":0.0,
+  "duration":76.85224,
   "exportDir":"",
-  "name":"mus_birdnoise",
+  "name":"noelle_ferriswheel",
   "parent":{
     "name":"musica",
     "path":"folders/musica.yy",
@@ -21,6 +21,6 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"mus_birdnoise.ogg",
+  "soundFile":"noelle_ferriswheel.ogg",
   "volume":1.0,
 }

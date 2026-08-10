@@ -1,15 +1,18 @@
 {
   "$GMObject":"",
-  "%Name":"colision",
+  "%Name":"colision_rampa",
   "eventList":[],
   "managed":true,
-  "name":"colision",
+  "name":"colision_rampa",
   "overriddenProperties":[],
   "parent":{
     "name":"Objetos",
     "path":"folders/Objetos.yy",
   },
-  "parentObjectId":null,
+  "parentObjectId":{
+    "name":"colision",
+    "path":"objects/colision/colision.yy",
+  },
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
@@ -28,8 +31,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_colision",
-    "path":"sprites/spr_colision/spr_colision.yy",
+    "name":"spr_colision_rampa",
+    "path":"sprites/spr_colision_rampa/spr_colision_rampa.yy",
   },
   "spriteMaskId":null,
   "visible":true,
