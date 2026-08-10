@@ -5,74 +5,27 @@ movimiento = false;
 if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox))
 {
     // Correr
+    var _vel = 4;
     if (keyboard_check(ord("X")))
     {
-        velocidad = 5;
+        _vel = 5;
     }
     else
     {
-        velocidad = 4;
+        _vel = 4;
     }
 
-    // Derecha (Subida y bajada automática de rampas)
+    // Derecha (Subida y bajada automática adaptada a la velocidad de carrera)
     if (keyboard_check(vk_right))
     {
         direccion = "derecha";
         face = RIGHT;
 
-        var _max_slope = 4; // Altura máxima que puede subir o bajar automáticamente
+        var _max_slope = _vel; // Se adapta dinámicamente a la velocidad actual (4 o 5)
 
-        if (!place_meeting(x + velocidad, y, colision))
+        if (!place_meeting(x + _vel, y, colision))
         {
-            x += velocidad;
-            movimiento = true;
-        }
-        else
-        {
-            var _sloped = false;
-            
-            // 1. Intentar subir (rampa hacia arriba)
-            for (var _i = 1; _i <= _max_slope; _i++)
-            {
-                if (!place_meeting(x + velocidad, y - _i, colision))
-                {
-                    y -= _i; 
-                    x += velocidad; 
-                    movimiento = true;
-                    _sloped = true;
-                    break;
-                }
-            }
-            
-            // 2. Si no pudo subir, intentar bajar (rampa hacia abajo / superior)
-            if (!_sloped)
-            {
-                for (var _i = 1; _i <= _max_slope; _i++)
-                {
-                    if (!place_meeting(x + velocidad, y + _i, colision))
-                    {
-                        y += _i; 
-                        x += velocidad; 
-                        movimiento = true;
-                        _sloped = true;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    // Izquierda (Subida y bajada automática de rampas)
-    if (keyboard_check(vk_left))
-    {
-        direccion = "izquierda";
-        face = LEFT;
-
-        var _max_slope = 4;
-
-        if (!place_meeting(x - velocidad, y, colision))
-        {
-            x -= velocidad;
+            x += _vel;
             movimiento = true;
         }
         else
@@ -82,10 +35,10 @@ if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox))
             // 1. Intentar subir
             for (var _i = 1; _i <= _max_slope; _i++)
             {
-                if (!place_meeting(x - velocidad, y - _i, colision))
+                if (!place_meeting(x + _vel, y - _i, colision))
                 {
                     y -= _i; 
-                    x -= velocidad; 
+                    x += _vel; 
                     movimiento = true;
                     _sloped = true;
                     break;
@@ -97,10 +50,58 @@ if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox))
             {
                 for (var _i = 1; _i <= _max_slope; _i++)
                 {
-                    if (!place_meeting(x - velocidad, y + _i, colision))
+                    if (!place_meeting(x + _vel, y + _i, colision))
                     {
                         y += _i; 
-                        x -= velocidad; 
+                        x += _vel; 
+                        movimiento = true;
+                        _sloped = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // Izquierda (Subida y bajada automática adaptada a la velocidad de carrera)
+    if (keyboard_check(vk_left))
+    {
+        direccion = "izquierda";
+        face = LEFT;
+
+        var _max_slope = _vel;
+
+        if (!place_meeting(x - _vel, y, colision))
+        {
+            x -= _vel;
+            movimiento = true;
+        }
+        else
+        {
+            var _sloped = false;
+            
+            // 1. Intentar subir
+            for (var _i = 1; _i <= _max_slope; _i++)
+            {
+                if (!place_meeting(x - _vel, y - _i, colision))
+                {
+                    y -= _i; 
+                    x -= _vel; 
+                    movimiento = true;
+                    _sloped = true;
+                    break;
+                }
+            }
+            
+            // 2. Intentar bajar
+            if (!_sloped)
+            {
+                for (var _i = 1; _i <= _max_slope; _i++)
+                {
+                    if (!place_meeting(x - _vel, y + _i, colision))
+                    {
+                        y += _i; 
+                        x -= _vel; 
                         movimiento = true;
                         _sloped = true;
                         break;
@@ -116,9 +117,9 @@ if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox))
         direccion = "arriba";
         face = UP;
 
-        if (!place_meeting(x, y - velocidad, colision))
+        if (!place_meeting(x, y - _vel, colision))
         {
-            y -= velocidad;
+            y -= _vel;
             movimiento = true;
         }
     }
@@ -129,9 +130,9 @@ if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox))
         direccion = "abajo";
         face = DOWN;
 
-        if (!place_meeting(x, y + velocidad, colision))
+        if (!place_meeting(x, y + _vel, colision))
         {
-            y += velocidad;
+            y += _vel;
             movimiento = true;
         }
     }
