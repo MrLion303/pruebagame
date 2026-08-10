@@ -4,19 +4,17 @@ skip_key = keyboard_check_pressed(ord("X")) || keyboard_check_pressed(vk_shift);
 if (!variable_instance_exists(id, "page_number") || page_number <= 0) exit;
 if (!variable_instance_exists(id, "text") || !is_array(text)) exit;
 
-var _box_scale = 0.75; 
-var _box_w = textbox_width * _box_scale;
-var _box_h = textbox_heigh * _box_scale;
-
 var _cam_x = camera_get_view_x(view_camera[0]);
 var _cam_y = camera_get_view_y(view_camera[0]);
 var _cam_w = camera_get_view_width(view_camera[0]);
 
-textbox_x = _cam_x + (_cam_w - _box_w) / 2; 
-textbox_y = _cam_y + camera_get_view_height(view_camera[0]) - _box_h - 16;
+textbox_x = _cam_x + (_cam_w - textbox_width) / 2; 
+textbox_y = _cam_y + camera_get_view_height(view_camera[0]) - textbox_height - 16;
 
-var _txtb_x = textbox_x + border;
-var _txtb_y = textbox_y + border;
+var _txt_scale = 0.55; 
+var _has_speaker = (page < array_length(speaker_sprite) && speaker_sprite[page] != noone && speaker_sprite[page] >= 0);
+var _left_margin = _has_speaker ? (border + 55) : (border + 10); 
+var _available_width = textbox_width - _left_margin - border;
 
 if setup == false
 {
@@ -24,6 +22,83 @@ if setup == false
     draw_set_font(global.font_main);
     draw_set_valign(fa_top);
     draw_set_halign(fa_left);
+    
+    for(var p = 0; p < page_number; p++)
+    {
+        text_lenght[p] = string_length(text[p]);
+        text_x_offset[p] = 0;
+        
+        line_break_num[p] = 0;
+        
+        var _last_space = -1;
+        var _line_start_char = 1;
+        
+        var _p_has_speaker = (p < array_length(speaker_sprite) && speaker_sprite[p] != noone && speaker_sprite[p] >= 0);
+        var _p_left_margin = _p_has_speaker ? (border + 55) : (border + 10);
+        var _p_avail_width = textbox_width - _p_left_margin - border;
+        
+        for(var c = 1; c <= text_lenght[p]; c++)
+        {
+            var _char_current = string_char_at(text[p], c);
+            
+            if (_char_current == " ") {
+                _last_space = c;
+            }
+            
+            var _sub_str = string_copy(text[p], _line_start_char, c - _line_start_char + 1);
+            var _str_w = string_width(_sub_str) * _txt_scale;
+            
+            if (_str_w > _p_avail_width)
+            {
+                if (_last_space != -1 && _last_space >= _line_start_char)
+                {
+                    line_break_pos[line_break_num[p], p] = _last_space + 1;
+                    line_break_num[p]++;
+                    _line_start_char = _last_space + 1;
+                    _last_space = -1;
+                }
+                else
+                {
+                    line_break_pos[line_break_num[p], p] = c;
+                    line_break_num[p]++;
+                    _line_start_char = c;
+                }
+            }
+        }
+        
+        for(var c = 0; c < text_lenght[p]; c++)
+        {
+            var _char_pos = c + 1;
+            char[c, p] = string_char_at(text[p], _char_pos);
+            
+            var _txt_x = textbox_x + _p_left_margin;
+            var _txt_y = textbox_y + border;
+            
+            var _txt_line = 0;
+            var _line_start_pos = 1;
+            
+            for(var lb = 0; lb < line_break_num[p]; lb++)
+            {
+                if _char_pos >= line_break_pos[lb, p]
+                {
+                    _txt_line = lb + 1;
+                    _line_start_pos = line_break_pos[lb, p];
+                }
+            }
+            
+            if (_line_start_pos == _char_pos && char[c, p] == " ") {
+                char_x[c, p] = -9999;
+                char_y[c, p] = -9999;
+                continue;
+            }
+            
+            var _str_copy = string_copy(text[p], _line_start_pos, _char_pos - _line_start_pos + 1);
+            var _current_txt_w = string_width(_str_copy) * _txt_scale;
+            
+            char_x[c, p] = _txt_x + _current_txt_w - (string_width(char[c, p]) * _txt_scale);
+            char_y[c, p] = _txt_y + (_txt_line * 17);
+        }
+    }
 }
 
 if (page >= page_number) page = page_number - 1;
@@ -66,18 +141,35 @@ else if accept_key
     }
 }
 
+var _txtb_x = textbox_x;
+var _txtb_y = textbox_y;
 txtb_img += txtb_img_spd;
-draw_sprite_ext(txtb_spr, txtb_img, textbox_x, textbox_y, _box_w/txtb_spr_w, _box_h/txtb_spr_h, 0, c_white, 1);
 
+var _current_txtb_spr = (page < array_length(txtb_spr) && txtb_spr[page] != undefined) ? txtb_spr[page] : spr_textbox;
+txtb_spr_w = sprite_get_width(_current_txtb_spr);
+txtb_spr_h = sprite_get_height(_current_txtb_spr);
+
+// Dibuja el fondo de la caja
+draw_sprite_ext(_current_txtb_spr, txtb_img, _txtb_x, _txtb_y, textbox_width/txtb_spr_w, textbox_height/txtb_spr_h, 0, c_white, 1);
+
+// Dibuja el sprite de la cabeza/personaje de forma ultra segura
+var _safe_speaker = (page < array_length(speaker_sprite)) ? speaker_sprite[page] : noone;
+if (_safe_speaker != noone && _safe_speaker >= 0)
+{
+    draw_sprite(_safe_speaker, 0, _txtb_x + border + 4, _txtb_y + border + 4);
+}
+
+// Opciones
 if (variable_instance_exists(id, "option_number") && option_number > 0)
 {
     if (draw_char == text_lenght[page] && page == page_number - 1)
     {
+        draw_set_font(global.font_main);
         option_pos += keyboard_check_pressed(vk_right) - keyboard_check_pressed(vk_left);
         option_pos = clamp(option_pos, 0, option_number - 1);
         
-        var _op_scale = 1/3; 
-        var _op_spacing = 36; 
+        var _op_scale = 0.45;
+        var _op_spacing = 10; 
         var _total_options_width = 0;
         
         for (var op = 0; op < option_number; op++)
@@ -88,8 +180,8 @@ if (variable_instance_exists(id, "option_number") && option_number > 0)
             }
         }
         
-        var _start_x = textbox_x + (_box_w - _total_options_width) / 2;
-        var _start_y = textbox_y + _box_h - border - 28; 
+        var _start_x = textbox_x + (textbox_width - _total_options_width) / 2;
+        var _start_y = textbox_y + textbox_height - border - 18; 
         var _current_x = _start_x;
         
         for (var op = 0; op < option_number; op++)
@@ -98,7 +190,7 @@ if (variable_instance_exists(id, "option_number") && option_number > 0)
             
             if option_pos == op 
             {
-                draw_sprite_ext(spr_textbox_arrow, 0, _current_x - 12, _start_y + 3, 0.4, 0.4, 0, c_white, 1);
+                draw_sprite_ext(spr_textbox_arrow, 0, _current_x - 7, _start_y + 1, 0.4, 0.4, 0, c_white, 1);
             }
             
             draw_text_transformed(_current_x, _start_y, option[op], _op_scale, _op_scale, 0);
@@ -107,28 +199,16 @@ if (variable_instance_exists(id, "option_number") && option_number > 0)
     }
 }
 
-var _text_scale = 5/9;
-var _correct_line_width = (_box_w - (border * 2)) / _text_scale;
-var _proper_line_sep = 28; 
-
-var _drawtext = "";
-if (is_array(text) && page < array_length(text)) {
-    _drawtext = string_copy(text[page], 1, draw_char);
-}
-
+// Dibujar el texto carácter por carácter
+draw_set_font(global.font_main);
 var _current_color = c_white;
 if (variable_instance_exists(id, "text_color") && is_array(text_color) && page < array_length(text_color)) {
     _current_color = text_color[page];
 }
 
-draw_text_ext_transformed_color(
-    _txtb_x, 
-    _txtb_y, 
-    _drawtext, 
-    _proper_line_sep, 
-    _correct_line_width, 
-    _text_scale, 
-    _text_scale, 
-    0,
-    _current_color, _current_color, _current_color, _current_color, 1
-);
+for (var c = 0; c < draw_char; c++)
+{
+    if (char_x[c, page] != -9999) {
+        draw_text_transformed_color(char_x[c, page], char_y[c, page], char[c, page], _txt_scale, _txt_scale, 0, _current_color, _current_color, _current_color, _current_color, 1);
+    }
+}

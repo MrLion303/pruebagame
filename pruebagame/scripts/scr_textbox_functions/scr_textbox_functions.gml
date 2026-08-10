@@ -1,6 +1,30 @@
+function scr_set_defaults_for_text() {
+    if (!variable_instance_exists(id, "txtb_spr")) {
+        txtb_spr = [spr_textbox];
+    }
+    if (array_length(txtb_spr) <= page_number) {
+        array_resize(txtb_spr, page_number + 1);
+    }
+    txtb_spr[page_number] = spr_textbox;
+    
+    if (!variable_instance_exists(id, "speaker_sprite")) {
+        speaker_sprite = [noone];
+    }
+    if (array_length(speaker_sprite) <= page_number) {
+        array_resize(speaker_sprite, page_number + 1);
+    }
+    speaker_sprite[page_number] = noone;
+    
+    line_break_pos[0, page_number] = 999;
+    line_break_num[page_number] = 0;
+    line_break_offset[page_number] = 0;
+    speaker_side[page_number] = 1;
+}
+
 /// @param text
 /// @param [color]
-function scr_text(_text, _color = c_white){
+/// @param [speaker_sprite]
+function scr_text(_text, _color = c_white, _speaker_spr = noone){
     with (obj_textbox)
     {
         text[page_number] = _text;
@@ -12,6 +36,14 @@ function scr_text(_text, _color = c_white){
             array_resize(text_color, page_number + 1);
         }
         text_color[page_number] = _color;
+        
+        if (!variable_instance_exists(id, "speaker_sprite")) {
+            speaker_sprite = array_create(page_number + 1, noone);
+        }
+        if (array_length(speaker_sprite) <= page_number) {
+            array_resize(speaker_sprite, page_number + 1);
+        }
+        speaker_sprite[page_number] = _speaker_spr;
         
         if (!variable_instance_exists(id, "is_multi_color")) {
             is_multi_color = array_create(page_number + 1, false);

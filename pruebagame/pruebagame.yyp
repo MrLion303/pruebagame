@@ -69,6 +69,7 @@
     {"id":{"name":"spr_colision","path":"sprites/spr_colision/spr_colision.yy",},},
     {"id":{"name":"spr_main_font","path":"sprites/spr_main_font/spr_main_font.yy",},},
     {"id":{"name":"spr_music_trigger","path":"sprites/spr_music_trigger/spr_music_trigger.yy",},},
+    {"id":{"name":"spr_noelle_normal","path":"sprites/spr_noelle_normal/spr_noelle_normal.yy",},},
     {"id":{"name":"spr_npc_1","path":"sprites/spr_npc_1/spr_npc_1.yy",},},
     {"id":{"name":"spr_npc_2","path":"sprites/spr_npc_2/spr_npc_2.yy",},},
     {"id":{"name":"spr_save","path":"sprites/spr_save/spr_save.yy",},},

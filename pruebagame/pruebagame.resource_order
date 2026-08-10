@@ -40,6 +40,7 @@
     {"name":"spr_buttons","order":4,"path":"sprites/spr_buttons/spr_buttons.yy",},
     {"name":"spr_main_font","order":2,"path":"sprites/spr_main_font/spr_main_font.yy",},
     {"name":"spr_music_trigger","order":6,"path":"sprites/spr_music_trigger/spr_music_trigger.yy",},
+    {"name":"spr_noelle_normal","order":9,"path":"sprites/spr_noelle_normal/spr_noelle_normal.yy",},
     {"name":"spr_npc_1","order":6,"path":"sprites/spr_npc_1/spr_npc_1.yy",},
     {"name":"spr_npc_2","order":7,"path":"sprites/spr_npc_2/spr_npc_2.yy",},
     {"name":"spr_save","order":4,"path":"sprites/spr_save/spr_save.yy",},
