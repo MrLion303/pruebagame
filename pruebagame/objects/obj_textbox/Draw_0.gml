@@ -13,7 +13,7 @@ textbox_y = _cam_y + camera_get_view_height(view_camera[0]) - textbox_height - 1
 
 var _txt_scale = 0.55; 
 var _has_speaker = (page < array_length(speaker_sprite) && speaker_sprite[page] != noone && speaker_sprite[page] >= 0);
-var _left_margin = _has_speaker ? (border + 55) : (border + 10); 
+var _left_margin = _has_speaker ? (border + 75) : (border + 10); 
 var _available_width = textbox_width - _left_margin - border;
 
 if setup == false
@@ -34,7 +34,7 @@ if setup == false
         var _line_start_char = 1;
         
         var _p_has_speaker = (p < array_length(speaker_sprite) && speaker_sprite[p] != noone && speaker_sprite[p] >= 0);
-        var _p_left_margin = _p_has_speaker ? (border + 55) : (border + 10);
+        var _p_left_margin = _p_has_speaker ? (border + 75) : (border + 10);
         var _p_avail_width = textbox_width - _p_left_margin - border;
         
         for(var c = 1; c <= text_lenght[p]; c++)
@@ -114,8 +114,38 @@ if (is_undefined(text_lenght[page])) {
 
 if (draw_char < text_lenght[page])
 {
-    draw_char += text_spd;
+    var _current_char_checking = string_char_at(text[page], floor(draw_char));
+    var _is_punctuation = (_current_char_checking == "." || _current_char_checking == "," || _current_char_checking == "!" || _current_char_checking == "?");
+    
+    // Pausa un pelín más larga en los signos de puntuación (velocidad reducida a 0.08)
+    var _actual_speed = _is_punctuation ? 0.08 : text_spd;
+    
+    draw_char += _actual_speed;
     draw_char = clamp(draw_char, 0, text_lenght[page]);
+    
+    // Reproducción de sonido de voz (congelando el timer durante la pausa de puntuación)
+    if (floor(draw_char) > 0 && floor(draw_char) <= text_lenght[page])
+    {
+        var _char_to_speak = string_char_at(text[page], floor(draw_char));
+        if (_char_to_speak != " ")
+        {
+            if (!_is_punctuation)
+            {
+                text_sound_timer++;
+            }
+            
+            if (text_sound_timer >= text_sound_delay)
+            {
+                text_sound_timer = 0;
+                
+                var _current_sound = (page < array_length(text_sound) && text_sound[page] != undefined) ? text_sound[page] : snd_text;
+                
+                if (audio_exists(_current_sound)) {
+                    audio_play_sound(_current_sound, 1, false);
+                }
+            }
+        }
+    }
     
     if skip_key
     {
@@ -149,10 +179,8 @@ var _current_txtb_spr = (page < array_length(txtb_spr) && txtb_spr[page] != unde
 txtb_spr_w = sprite_get_width(_current_txtb_spr);
 txtb_spr_h = sprite_get_height(_current_txtb_spr);
 
-// Dibuja el fondo de la caja
 draw_sprite_ext(_current_txtb_spr, txtb_img, _txtb_x, _txtb_y, textbox_width/txtb_spr_w, textbox_height/txtb_spr_h, 0, c_white, 1);
 
-// Dibuja el sprite de la cabeza/personaje de forma ultra segura
 var _safe_speaker = (page < array_length(speaker_sprite)) ? speaker_sprite[page] : noone;
 if (_safe_speaker != noone && _safe_speaker >= 0)
 {
@@ -199,7 +227,6 @@ if (variable_instance_exists(id, "option_number") && option_number > 0)
     }
 }
 
-// Dibujar el texto carácter por carácter
 draw_set_font(global.font_main);
 var _current_color = c_white;
 if (variable_instance_exists(id, "text_color") && is_array(text_color) && page < array_length(text_color)) {

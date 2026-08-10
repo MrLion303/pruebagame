@@ -9,7 +9,7 @@ function scr_game_text(_text_id){
 
 
 
-        case "npc":
+        case "npc 1":
             scr_text("Hola como tai yo bien y usted? jejejej12344");
             scr_text("EL PITITO TE LO COMES HOLA SOY GERMAN");
             scr_text("Bueno... te gusta el keke?");
@@ -18,17 +18,18 @@ function scr_game_text(_text_id){
             break;
             
 	        case "npc 1 - yes":
-	            scr_text("VIVAAAAAAAAAAA!!!");
+	            scr_text("El... keke? Oh! Claro que me gusta!",c_white, spr_noelle_normal, snd_noelle);
+				scr_text("VIVAAAAAAAAAAA!!!");
 	            break;
             
 			  case "npc 1 - no":
 	            scr_text("que tontorron");
 	            break;
         
-		case "npc 1":
+		case "npc":
     // Diálogo con Noelle y su respectivo sprite de cabeza a la izquierda
-    scr_text("Hola, soy Noelle y este es mi diálogo con retrato.", c_white, spr_noelle_normal);
-    scr_text("Este segundo renglón también se acomoda solito respetando la cabeza.", c_white, spr_noelle_normal);
+    scr_text("Hola, soy Noelle y este es mi diálogo con retrato.", c_white, spr_noelle_normal, snd_noelle);
+    scr_text("Este segundo renglón tambien se acomoda solito respetando la cabeza.", c_white, spr_noelle_normal, snd_noelle);
     
     // Diálogo normal sin sprite por si quieres alternar en la misma caja
     scr_text("Y este mensaje vuelve a ser normal sin cabeza.");
