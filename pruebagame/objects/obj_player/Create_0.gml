@@ -6,8 +6,8 @@ face = DOWN;
 facing_direction = 2;
 
 // --- NUEVAS ESTADÍSTICAS Y EQUIPAMIENTO ---
-hp = 30;
-hp_max = 30;
+hp = 80;
+hp_max = 80;
 nivel = 1;
 ataque_base = 0;
 defensa_base = 0;

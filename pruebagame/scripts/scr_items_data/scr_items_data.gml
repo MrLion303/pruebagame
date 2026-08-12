@@ -1,42 +1,28 @@
 function scr_item_db() {
     global.item_db = {
-		
-		
-		
         agua: {
             nombre: "Vaso de Agua",
             descripcion: "Ayuda a hidratarte",
             tipo: "consumible",
             efecto: function() {
-                // Suponiendo que tu jugador tiene la variable hp y max_hp
-                if (variable_global_exists("hp")) {
-                    hp = min(max_hp, hp + 50);
+                var _p = obj_player;
+                if (instance_exists(_p)) {
+                    _p.hp = min(_p.hp_max, _p.hp + 1);
                 }
             },
-            icono: -1 // Reemplaza por tu sprite index si tienes
+            icono: -1 
         },
-		
-		
-		
-
         manzana: {
             nombre: "Manzana",
             descripcion: "Rica y crujiente",
             tipo: "consumible",
-            efecto: function() { hp = min(max_hp, hp + 20); },
+            efecto: function() {
+                var _p = obj_player;
+                if (instance_exists(_p)) {
+                    _p.hp = min(_p.hp_max, _p.hp + 20);
+                }
+            },
             icono: -1
         }
-		
-		
-		        // Puedes agregar más ítems aquí fácilmente en el futuro:
-        /*
-        manzana: {
-            nombre: "Manzana",
-            descripcion: "Rica y crujiente",
-            tipo: "consumible",
-            efecto: function() { hp = min(max_hp, hp + 20); },
-            icono: -1
-        }
-        */
     };
 }
