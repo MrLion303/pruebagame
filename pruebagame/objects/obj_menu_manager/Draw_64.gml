@@ -9,17 +9,13 @@ var gui_y = 64;
 var gui_w = 520;
 var gui_h = 340;
 
-// 1. Fondo Principal (ELIMINADO / INVISIBLE)
-// draw_sprite_stretched(spr_textbox, 0, gui_x, gui_y, gui_w, gui_h);
-
-// 2. Menú Izquierdo (5 opciones)
+// Menú Izquierdo (5 opciones)
 var m_x = gui_x + 16;
 var m_y = gui_y + 16;
 var m_w = 130;
 var m_h = 308;
 draw_sprite_stretched(spr_textbox, 0, m_x, m_y, m_w, m_h);
 
-// Dibujar las 5 opciones del menú izquierdo
 draw_set_halign(fa_left); 
 for (var i = 0; i < array_length(main_options); i++) {
     var col = (state == MENU_STATE.MAIN && main_index == i) ? c_yellow : c_orange;
@@ -27,7 +23,7 @@ for (var i = 0; i < array_length(main_options); i++) {
     draw_text(m_x + 16, m_y + 12 + (i * 46), main_options[i]);
 }
 
-// CASO A: Confirmar cierre de juego (CENTRADO)
+// CASO A: Confirmar cierre de juego
 if (state == MENU_STATE.GAME_CLOSE_CONFIRM) {
     var close_box_w = 314;
     var close_box_h = 115;
@@ -147,7 +143,6 @@ else if (state >= MENU_STATE.INVENTORY && state <= MENU_STATE.ITEM_DROP_CONFIRM)
         }
     }
     
-    // --- BARRA DE SCROLL INVENTARIO ---
     var bar_x = inv_box_x + 322;
     var bar_y = start_y;
     var bar_h = 120;
@@ -186,7 +181,6 @@ else if (state >= MENU_STATE.INVENTORY && state <= MENU_STATE.ITEM_DROP_CONFIRM)
         draw_text_ext(box_inf_x + 16, box_inf_y + 45, item_info.descripcion, 25, 280);
     }
     else if (state == MENU_STATE.ITEM_DROP_CONFIRM) {
-        // --- INVENTARIO: CONFIRMAR TIRAR (CENTRADO) ---
         draw_set_halign(fa_center);
         draw_set_color(c_yellow);
         draw_text(box_inf_x + (box_inf_w / 2), box_inf_y + 20, "Estas seguro?");
@@ -255,7 +249,6 @@ else if (state >= MENU_STATE.EQUIP_MENU && state <= MENU_STATE.EQUIP_DROP_CONFIR
         }
     }
     
-    // --- BARRA DE SCROLL EQUIPAMIENTO ---
     var bar_x = eq_box_x + 322;
     var bar_y = start_y;
     var bar_h = 120;
@@ -294,7 +287,6 @@ else if (state >= MENU_STATE.EQUIP_MENU && state <= MENU_STATE.EQUIP_DROP_CONFIR
         draw_text_ext(box_inf_x + 16, box_inf_y + 45, eq_info.descripcion, 25, 280);
     }
     else if (state == MENU_STATE.EQUIP_DROP_CONFIRM) {
-        // --- EQUIPAMIENTO: CONFIRMAR TIRAR (CENTRADO) ---
         draw_set_halign(fa_center);
         draw_set_color(c_yellow);
         draw_text(box_inf_x + (box_inf_w / 2), box_inf_y + 20, "Estas seguro?");
@@ -321,6 +313,64 @@ else if (state >= MENU_STATE.EQUIP_MENU && state <= MENU_STATE.EQUIP_DROP_CONFIR
         } else {
             draw_text(box_inf_x + 16, box_inf_y + 25, "Espacio vacio.");
         }
+    }
+}
+// CASO E: MENÚ CONFIG (Pestaña Controles más ancha hacia la derecha)
+else if (state == MENU_STATE.CONFIG_MENU || state == MENU_STATE.CONFIG_ACTION) {
+    draw_set_halign(fa_left);
+    var cfg_box_x = m_x + m_w + 12;
+    var cfg_box_y = m_y;
+    var cfg_box_w = 346;
+    var cfg_box_h = m_h;
+    
+    draw_sprite_stretched(spr_textbox, 0, cfg_box_x, cfg_box_y, cfg_box_w, cfg_box_h);
+    
+    var is_on_tabs = (state == MENU_STATE.CONFIG_MENU);
+    
+    var tab_gen_col = (config_tab == 0) ? c_yellow : c_white;
+    var tab_ctrl_col = (config_tab == 1) ? c_yellow : c_white;
+    
+    // Pestaña General
+    draw_set_color(config_tab == 0 ? (is_on_tabs ? c_yellow : c_orange) : c_dkgray);
+    draw_rectangle(cfg_box_x + 20, cfg_box_y + 14, cfg_box_x + 145, cfg_box_y + 50, true);
+    draw_set_color(tab_gen_col);
+    draw_text(cfg_box_x + 32, cfg_box_y + 21, "General");
+    
+    // Pestaña Controles (Ampliud extendida hacia la derecha: de x+155 a x+310)
+    draw_set_color(config_tab == 1 ? (is_on_tabs ? c_yellow : c_orange) : c_dkgray);
+    draw_rectangle(cfg_box_x + 155, cfg_box_y + 14, cfg_box_x + 310, cfg_box_y + 50, true);
+    draw_set_color(tab_ctrl_col);
+    draw_text(cfg_box_x + 167, cfg_box_y + 21, "Controles");
+    
+    var start_y = cfg_box_y + 72;
+    var line_spacing = 38;
+    
+    if (config_tab == 0) {
+        var options_general = [
+            { name: "Volumen General", val: string(round(master_volume * 100)) + "%" },
+            { name: "Pantalla Comp",   val: fullscreen_enabled ? "Si" : "No" },
+            { name: "Auto-correr",      val: autocorrer_enabled ? "Si" : "No" },
+            { name: "Volumen al Titulo", val: "" },
+            { name: "Volver",           val: "" }
+        ];
+        
+        options_general[3].name = "Volumen al Titulo";
+        
+        for (var i = 0; i < array_length(options_general); i++) {
+            var col_item = (!is_on_tabs && config_index == i) ? c_yellow : c_orange;
+            draw_set_color(col_item);
+            
+            draw_text(cfg_box_x + 24, start_y + (i * line_spacing), options_general[i].name);
+            
+            if (options_general[i].val != "") {
+                draw_text(cfg_box_x + 240, start_y + (i * line_spacing), options_general[i].val);
+            }
+        }
+    } 
+    else {
+        draw_set_color(c_ltgray);
+        draw_text(cfg_box_x + 24, start_y, "Configuracion de controles");
+        draw_text(cfg_box_x + 24, start_y + 40, "Proximamente...");
     }
 }
 

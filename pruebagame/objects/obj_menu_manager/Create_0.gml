@@ -1,4 +1,4 @@
-main_options = ["INV", "EQUIP", "STAD", "OPC", "CERRAR"];
+main_options = ["INV", "EQUIP", "STAD", "CONFIG", "CERRAR"];
 main_index = 0;
 
 enum MENU_STATE {
@@ -15,11 +15,19 @@ enum MENU_STATE {
     EQUIP_DROP_CONFIRM,
     
     INFO_MENU,        
-    OPTIONS_MENU,    
+    CONFIG_MENU,      // Pestañas superiores (General / Controles)
+    CONFIG_ACTION,    // Opciones internas de la configuración
     GAME_CLOSE_CONFIRM
 }
 
 state = MENU_STATE.CLOSED;
+
+// Variables para CONFIG
+config_tab = 0;         // 0 = General, 1 = Controles
+config_index = -1;      // -1 = Seleccionando pestañas superiores; 0+ = Opciones internas
+master_volume = 1.0;    
+fullscreen_enabled = window_get_fullscreen(); 
+autocorrer_enabled = false; 
 
 inventory = ["agua", -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
 inv_x = 0;
@@ -27,7 +35,7 @@ inv_y = 0;
 inv_scroll = 0; 
 
 equipment = array_create(51, -1);
-equipment[0] = "espada_basica";		
+equipment[0] = "espada_basica";        
 equipment[1] = "armadura_basica";
 equip_x = 0;
 equip_y = 0;

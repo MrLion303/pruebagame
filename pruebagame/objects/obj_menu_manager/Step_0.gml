@@ -33,6 +33,13 @@ if (keyboard_check_pressed(ord("X")) || keyboard_check_pressed(vk_shift)) {
     } else if (state == MENU_STATE.EQUIP_DROP_CONFIRM) {
         state = MENU_STATE.EQUIP_ACTION;
     }
+    // Retrocesos para CONFIG
+    else if (state == MENU_STATE.CONFIG_MENU) {
+        state = MENU_STATE.MAIN;
+    } else if (state == MENU_STATE.CONFIG_ACTION) {
+        state = MENU_STATE.CONFIG_MENU;
+        config_index = -1; // Regresa el foco a las pestañas
+    }
     // Retrocesos para STAD y CERRAR
     else if (state == MENU_STATE.INFO_MENU) {
         state = MENU_STATE.MAIN;
@@ -73,7 +80,10 @@ switch (state) {
                 case 2: // STAD
                     state = MENU_STATE.INFO_MENU;
                     break;
-                case 3: // OPC
+                case 3: // CONFIG
+                    state = MENU_STATE.CONFIG_MENU;
+                    config_tab = 0;
+                    config_index = -1; // Empieza seleccionando pestañas superiores
                     break;
                 case 4: // CERRAR
                     state = MENU_STATE.GAME_CLOSE_CONFIRM;
@@ -341,6 +351,94 @@ switch (state) {
                 _textbox.page_number = array_length(_textbox.text);
             } else {
                 state = MENU_STATE.EQUIP_MENU;
+            }
+        }
+        break;
+
+    // --- LÓGICA PARA CONFIG (Pestañas superiores) ---
+    case MENU_STATE.CONFIG_MENU:
+        var _moved_cfg = false;
+        
+        if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D")) || 
+            keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) {
+            config_tab = (config_tab + 1) % 2;
+            _moved_cfg = true;
+        }
+        
+        if (_moved_cfg) {
+            audio_play_sound(snd_menumove, 10, false);
+        }
+        
+        if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
+            audio_play_sound(snd_menumove, 10, false);
+            config_index = 0; // Entra a las opciones internas
+            state = MENU_STATE.CONFIG_ACTION;
+        }
+        break;
+        
+    // --- LÓGICA PARA CONFIG_ACTION (Opciones internas) ---
+    case MENU_STATE.CONFIG_ACTION:
+        var _moved_cfg_act = false;
+        var max_cfg_index = (config_tab == 0) ? 4 : 0;
+        
+        if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) {
+            config_index = min(config_index + 1, max_cfg_index);
+            _moved_cfg_act = true;
+        }
+        if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) {
+            config_index = max(config_index - 1, 0);
+            _moved_cfg_act = true;
+        }
+        
+        if (_moved_cfg_act) {
+            audio_play_sound(snd_menumove, 10, false);
+        }
+        
+        if (config_tab == 0) {
+            if (config_index == 0) { // Volumen General (De 2 en 2 y con mantención de tecla)
+                var _vol_changed = false;
+                
+                if (keyboard_check(vk_right) || keyboard_check(ord("D"))) {
+                    master_volume = min(master_volume + 0.02, 1.0);
+                    audio_master_gain(master_volume);
+                    _vol_changed = true;
+                }
+                if (keyboard_check(vk_left) || keyboard_check(ord("A"))) {
+                    master_volume = max(master_volume - 0.02, 0.0);
+                    audio_master_gain(master_volume);
+                    _vol_changed = true;
+                }
+                
+                if (_vol_changed && !audio_is_playing(snd_menumove)) {
+                    audio_play_sound(snd_menumove, 10, false);
+                }
+            }
+            else if (config_index == 1) { // Pantalla Completa
+                if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D")) || 
+                    keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A")) ||
+                    keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
+                    fullscreen_enabled = !fullscreen_enabled;
+                    window_set_fullscreen(fullscreen_enabled);
+                    audio_play_sound(snd_menumove, 10, false);
+                }
+            }
+            else if (config_index == 2) { // Auto-correr
+                if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D")) || 
+                    keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A")) ||
+                    keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
+                    autocorrer_enabled = !autocorrer_enabled;
+                    audio_play_sound(snd_menumove, 10, false);
+                }
+            }
+            else if (config_index == 3 && (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter))) {
+                audio_play_sound(snd_menumove, 10, false);
+                state = MENU_STATE.CLOSED;
+                room_goto(rm_title);
+            }
+            else if (config_index == 4 && (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter))) {
+                audio_play_sound(snd_menumove, 10, false);
+                state = MENU_STATE.CONFIG_MENU;
+                config_index = -1;
             }
         }
         break;
