@@ -349,7 +349,7 @@ else if (state == MENU_STATE.CONFIG_MENU || state == MENU_STATE.CONFIG_ACTION) {
         var options_general = [
             { name: "Volumen General", val: string(round(master_volume * 100)) + "%" },
             { name: "Pantalla Comp",   val: fullscreen_enabled ? "Si" : "No" },
-            { name: "Auto-correr",      val: autocorrer_enabled ? "Si" : "No" },
+            { name: "Auto-correr",      val: global.autocorrer_enabled ? "Si" : "No" },
             { name: "Volumen al Titulo", val: "" },
             { name: "Volver",           val: "" }
         ];

@@ -27,7 +27,7 @@ config_tab = 0;         // 0 = General, 1 = Controles
 config_index = -1;      // -1 = Seleccionando pestañas superiores; 0+ = Opciones internas
 master_volume = 1.0;    
 fullscreen_enabled = window_get_fullscreen(); 
-autocorrer_enabled = false; 
+global.autocorrer_enabled = false; // <-- Ahora es global y persistente
 
 inventory = ["agua", -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
 inv_x = 0;

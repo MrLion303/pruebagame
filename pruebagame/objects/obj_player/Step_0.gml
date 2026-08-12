@@ -12,26 +12,41 @@ if (instance_exists(obj_menu_manager)) {
 // Si NO existe el pauser, Y TAMPOCO la caja de diálogo, Y EL MENÚ ESTÁ CERRADO, permitir movimiento
 if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox) && !_menu_abierto)
 {
-// Correr (Modificado para soportar Auto-correr)
+    // Lógica exacta de Auto-correr (Velocidad base 6, baja a 4 al presionar X o Shift solo si está activo)
     var _vel = 4;
-    var _auto_run_active = (variable_global_exists("auto_run") && global.auto_run);
+    var _auto_run_active = (variable_global_exists("autocorrer_enabled") && global.autocorrer_enabled);
+    var _tecla_lenta = (keyboard_check(ord("X")) || keyboard_check(vk_shift));
     
-    if (keyboard_check(ord("X")) || _auto_run_active)
+    if (_auto_run_active)
     {
-        _vel = 5;
+        if (_tecla_lenta)
+        {
+            _vel = 4; // Baja a 4 al mantener X o Shift porque el auto-correr está encendido
+        }
+        else
+        {
+            _vel = 6; // Corre por defecto a 6
+        }
     }
     else
     {
-        _vel = 4;
+        if (_tecla_lenta)
+        {
+            _vel = 6; // Si está apagado, la X o Shift sirve para correr a 6
+        }
+        else
+        {
+            _vel = 4; // Camina por defecto a 4
+        }
     }
 
-    // Derecha (Subida y bajada automática adaptada a la velocidad de carrera)
+    // Derecha (Subida y bajada automática adaptada a la velocidad actual)
     if (keyboard_check(vk_right))
     {
         direccion = "derecha";
         face = RIGHT;
 
-        var _max_slope = _vel; // Se adapta dinámicamente a la velocidad actual (4 o 5)
+        var _max_slope = _vel; 
 
         if (!place_meeting(x + _vel, y, colision))
         {
@@ -73,7 +88,7 @@ if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox) && !_menu_abie
         }
     }
 
-    // Izquierda (Subida y bajada automática adaptada a la velocidad de carrera)
+    // Izquierda (Subida y bajada automática adaptada a la velocidad actual)
     if (keyboard_check(vk_left))
     {
         direccion = "izquierda";

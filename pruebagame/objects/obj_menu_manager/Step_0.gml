@@ -395,7 +395,7 @@ switch (state) {
         }
         
         if (config_tab == 0) {
-            if (config_index == 0) { // Volumen General (De 2 en 2 y con mantención de tecla)
+            if (config_index == 0) { // Volumen General
                 var _vol_changed = false;
                 
                 if (keyboard_check(vk_right) || keyboard_check(ord("D"))) {
@@ -422,11 +422,11 @@ switch (state) {
                     audio_play_sound(snd_menumove, 10, false);
                 }
             }
-            else if (config_index == 2) { // Auto-correr
+            else if (config_index == 2) { // Auto-correr (Arreglado para modificar la global)
                 if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D")) || 
                     keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A")) ||
                     keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
-                    autocorrer_enabled = !autocorrer_enabled;
+                    global.autocorrer_enabled = !global.autocorrer_enabled;
                     audio_play_sound(snd_menumove, 10, false);
                 }
             }
