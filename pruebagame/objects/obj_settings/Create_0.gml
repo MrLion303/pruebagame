@@ -5,3 +5,8 @@ scr_item_db();
 scr_equips_data(); // <-- ¡Añadido aquí!
 
 // Creamos el gestor de menús de forma persistente y automática
+
+// --- CONFIGURACIÓN GLOBAL ---
+global.master_volume = 100; // 0 a 100
+global.fullscreen_enabled = window_get_fullscreen(); // Detecta si ya está en pantalla completa
+global.auto_run = false;     // Desactivado por defecto

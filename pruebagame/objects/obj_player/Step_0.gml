@@ -12,9 +12,11 @@ if (instance_exists(obj_menu_manager)) {
 // Si NO existe el pauser, Y TAMPOCO la caja de diálogo, Y EL MENÚ ESTÁ CERRADO, permitir movimiento
 if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox) && !_menu_abierto)
 {
-    // Correr
+// Correr (Modificado para soportar Auto-correr)
     var _vel = 4;
-    if (keyboard_check(ord("X")))
+    var _auto_run_active = (variable_global_exists("auto_run") && global.auto_run);
+    
+    if (keyboard_check(ord("X")) || _auto_run_active)
     {
         _vel = 5;
     }

@@ -9,8 +9,8 @@ var gui_y = 64;
 var gui_w = 520;
 var gui_h = 340;
 
-// 1. Fondo Principal
-draw_sprite_stretched(spr_textbox, 0, gui_x, gui_y, gui_w, gui_h);
+// 1. Fondo Principal (ELIMINADO / INVISIBLE)
+// draw_sprite_stretched(spr_textbox, 0, gui_x, gui_y, gui_w, gui_h);
 
 // 2. Menú Izquierdo (5 opciones)
 var m_x = gui_x + 16;
@@ -20,13 +20,14 @@ var m_h = 308;
 draw_sprite_stretched(spr_textbox, 0, m_x, m_y, m_w, m_h);
 
 // Dibujar las 5 opciones del menú izquierdo
+draw_set_halign(fa_left); 
 for (var i = 0; i < array_length(main_options); i++) {
     var col = (state == MENU_STATE.MAIN && main_index == i) ? c_yellow : c_orange;
     draw_set_color(col);
     draw_text(m_x + 16, m_y + 12 + (i * 46), main_options[i]);
 }
 
-// CASO A: Confirmar cierre de juego
+// CASO A: Confirmar cierre de juego (CENTRADO)
 if (state == MENU_STATE.GAME_CLOSE_CONFIRM) {
     var close_box_w = 314;
     var close_box_h = 115;
@@ -35,31 +36,80 @@ if (state == MENU_STATE.GAME_CLOSE_CONFIRM) {
     
     draw_sprite_stretched(spr_textbox, 0, close_box_x, close_box_y, close_box_w, close_box_h);
     
+    draw_set_halign(fa_center);
     draw_set_color(c_yellow);
-    draw_text(close_box_x + 16, close_box_y + 16, "Estas seguro?");
+    draw_text(close_box_x + (close_box_w / 2), close_box_y + 20, "Estas seguro?");
     
     var options_close = ["Si", "No"];
-    for (var c = 0; c < array_length(options_close); c++) {
+    var total_options = array_length(options_close);
+    var spacing = 90;
+    
+    for (var c = 0; c < total_options; c++) {
         var col_c = (close_confirm_index == c) ? c_yellow : c_white;
         draw_set_color(col_c);
-        draw_text(close_box_x + 40 + (c * 110), close_box_y + 60, options_close[c]);
+        var btn_x = close_box_x + (close_box_w / 2) + ((c - 0.5) * spacing);
+        draw_text(btn_x, close_box_y + 65, options_close[c]);
     }
+    
+    draw_set_halign(fa_left);
 }
-// CASO B: Menú INFO
+// CASO B: Menú STAD (Estadísticas)
 else if (state == MENU_STATE.INFO_MENU) {
+    draw_set_halign(fa_left);
     var info_box_x = m_x + m_w + 12;
     var info_box_y = m_y;
     var info_box_w = 346;
     var info_box_h = m_h;
     
     draw_sprite_stretched(spr_textbox, 0, info_box_x, info_box_y, info_box_w, info_box_h);
-    draw_set_color(c_yellow);
-    draw_text(info_box_x + 24, info_box_y + 24, "Seccion INFO");
-    draw_set_color(c_white);
-    draw_text_ext(info_box_x + 24, info_box_y + 70, "Proximamente...", 25, 300);
+    
+    var sx = info_box_x + 24;
+    var sy = info_box_y + 24;
+    
+    var _p = obj_player; 
+    
+    draw_set_color(c_orange);
+    
+    draw_text(sx, sy, "LV " + string(_p.nivel));
+    draw_text(sx + 150, sy, "HP " + string(_p.hp) + "/" + string(_p.hp_max));
+    
+    var _atk_total = _p.ataque_base;
+    if (_p.equipo_arma != -1 && variable_global_exists("equip_db")) {
+        var _arma_data = global.equip_db[$ _p.equipo_arma];
+        if (_arma_data != undefined && struct_exists(_arma_data, "ataque")) {
+            _atk_total += _arma_data.ataque;
+        }
+    }
+    draw_text(sx, sy + 50, "AT  " + string(_atk_total));
+    draw_text(sx + 150, sy + 50, "EXP: " + string(_p.exp_actual));
+    
+    var _def_total = _p.defensa_base;
+    if (_p.equipo_armadura != -1 && variable_global_exists("equip_db")) {
+        var _armadura_data = global.equip_db[$ _p.equipo_armadura];
+        if (_armadura_data != undefined && struct_exists(_armadura_data, "defensa")) {
+            _def_total += _armadura_data.defensa;
+        }
+    }
+    draw_text(sx, sy + 100, "DF  " + string(_def_total));
+    draw_text(sx + 150, sy + 100, "LVL SUB: " + string(_p.exp_siguiente));
+    
+    var _nombre_arma = "Ninguna";
+    if (_p.equipo_arma != -1 && variable_global_exists("equip_db")) {
+        var _arma_info = global.equip_db[$ _p.equipo_arma];
+        if (_arma_info != undefined) _nombre_arma = _arma_info.nombre;
+    }
+    draw_text(sx, sy + 160, "Arma: " + _nombre_arma);
+    
+    var _nombre_armadura = "Ninguna";
+    if (_p.equipo_armadura != -1 && variable_global_exists("equip_db")) {
+        var _armadura_info = global.equip_db[$ _p.equipo_armadura];
+        if (_armadura_info != undefined) _nombre_armadura = _armadura_info.nombre;
+    }
+    draw_text(sx, sy + 210, "Armadura: " + _nombre_armadura);
 }
 // CASO C: INVENTARIO DE CURACIÓN
 else if (state >= MENU_STATE.INVENTORY && state <= MENU_STATE.ITEM_DROP_CONFIRM) {
+    draw_set_halign(fa_left);
     var inv_box_x = m_x + m_w + 12;
     var inv_box_y = m_y;
     var inv_box_w = 346;
@@ -108,7 +158,6 @@ else if (state >= MENU_STATE.INVENTORY && state <= MENU_STATE.ITEM_DROP_CONFIRM)
     var sq_size = 4;
     draw_set_color(c_white);
     draw_rectangle(bar_x - sq_size, dot_y - sq_size, bar_x + sq_size, dot_y + sq_size, false);
-    // ----------------------------------
     
     var box_inf_x = inv_box_x + 16;
     var box_inf_y = inv_box_y + 175;
@@ -137,14 +186,22 @@ else if (state >= MENU_STATE.INVENTORY && state <= MENU_STATE.ITEM_DROP_CONFIRM)
         draw_text_ext(box_inf_x + 16, box_inf_y + 45, item_info.descripcion, 25, 280);
     }
     else if (state == MENU_STATE.ITEM_DROP_CONFIRM) {
+        // --- INVENTARIO: CONFIRMAR TIRAR (CENTRADO) ---
+        draw_set_halign(fa_center);
         draw_set_color(c_yellow);
-        draw_text(box_inf_x + 16, box_inf_y + 16, "Estas seguro?");
+        draw_text(box_inf_x + (box_inf_w / 2), box_inf_y + 20, "Estas seguro?");
+        
         var options_drop = ["Si", "No"];
-        for (var d = 0; d < array_length(options_drop); d++) {
+        var total_drop = array_length(options_drop);
+        var drop_spacing = 90;
+        
+        for (var d = 0; d < total_drop; d++) {
             var col_d = (drop_confirm_index == d) ? c_yellow : c_white;
             draw_set_color(col_d);
-            draw_text(box_inf_x + 40 + (d * 110), box_inf_y + 60, options_drop[d]);
+            var btn_dx = box_inf_x + (box_inf_w / 2) + ((d - 0.5) * drop_spacing);
+            draw_text(btn_dx, box_inf_y + 65, options_drop[d]);
         }
+        draw_set_halign(fa_left);
     }
     else {
         var inv_index = min((inv_y + inv_scroll) * 3 + inv_x, array_length(inventory) - 1);
@@ -160,6 +217,7 @@ else if (state >= MENU_STATE.INVENTORY && state <= MENU_STATE.ITEM_DROP_CONFIRM)
 }
 // CASO D: MENÚ DE EQUIPAMIENTO (51 slots)
 else if (state >= MENU_STATE.EQUIP_MENU && state <= MENU_STATE.EQUIP_DROP_CONFIRM) {
+    draw_set_halign(fa_left);
     var eq_box_x = m_x + m_w + 12;
     var eq_box_y = m_y;
     var eq_box_w = 346;
@@ -204,12 +262,10 @@ else if (state >= MENU_STATE.EQUIP_MENU && state <= MENU_STATE.EQUIP_DROP_CONFIR
     draw_set_color(c_dkgray);
     draw_line_width(bar_x, bar_y, bar_x, bar_y + bar_h, 2);
     
-    var max_scroll = (array_length(equipment) / 3) - 3; // (51 / 3) - 3 = 14
-    var dot_y = bar_y + (max_scroll > 0 ? (equip_scroll / max_scroll) * bar_h : 0);
+    var dot_y = bar_y + (max_equip_scroll > 0 ? (equip_scroll / max_equip_scroll) * bar_h : 0);
     var sq_size = 4;
     draw_set_color(c_white);
     draw_rectangle(bar_x - sq_size, dot_y - sq_size, bar_x + sq_size, dot_y + sq_size, false);
-    // -------------------------------------------------------
     
     var box_inf_x = eq_box_x + 16;
     var box_inf_y = eq_box_y + 175;
@@ -238,14 +294,22 @@ else if (state >= MENU_STATE.EQUIP_MENU && state <= MENU_STATE.EQUIP_DROP_CONFIR
         draw_text_ext(box_inf_x + 16, box_inf_y + 45, eq_info.descripcion, 25, 280);
     }
     else if (state == MENU_STATE.EQUIP_DROP_CONFIRM) {
+        // --- EQUIPAMIENTO: CONFIRMAR TIRAR (CENTRADO) ---
+        draw_set_halign(fa_center);
         draw_set_color(c_yellow);
-        draw_text(box_inf_x + 16, box_inf_y + 16, "Estas seguro?");
-        var options_drop = ["Si", "No"];
-        for (var d = 0; d < array_length(options_drop); d++) {
+        draw_text(box_inf_x + (box_inf_w / 2), box_inf_y + 20, "Estas seguro?");
+        
+        var options_drop_eq = ["Si", "No"];
+        var total_drop_eq = array_length(options_drop_eq);
+        var drop_eq_spacing = 90;
+        
+        for (var d = 0; d < total_drop_eq; d++) {
             var col_d = (drop_confirm_index == d) ? c_yellow : c_white;
             draw_set_color(col_d);
-            draw_text(box_inf_x + 40 + (d * 110), box_inf_y + 60, options_drop[d]);
+            var btn_deq_x = box_inf_x + (box_inf_w / 2) + ((d - 0.5) * drop_eq_spacing);
+            draw_text(btn_deq_x, box_inf_y + 65, options_drop_eq[d]);
         }
+        draw_set_halign(fa_left);
     }
     else {
         var eq_index = min((equip_y + equip_scroll) * 3 + equip_x, array_length(equipment) - 1);
@@ -260,4 +324,5 @@ else if (state >= MENU_STATE.EQUIP_MENU && state <= MENU_STATE.EQUIP_DROP_CONFIR
     }
 }
 
+draw_set_halign(fa_left);
 draw_set_color(c_white);
