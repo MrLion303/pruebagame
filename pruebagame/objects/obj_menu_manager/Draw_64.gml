@@ -1,3 +1,9 @@
+// --- NUEVO: BLOQUEO DE MENÚ EN ROOMS ESPECÍFICAS ---
+var _room_actual = room_get_name(room);
+if (_room_actual == "bbs" || _room_actual == "rm_title") {
+    exit; // Si estamos en bbs o rm_title, no dibuja absolutamente nada del menú
+}
+
 if (state == MENU_STATE.CLOSED || state == MENU_STATE.EXITING) exit;
 
 if (variable_global_exists("font_main")) {
@@ -69,14 +75,16 @@ else if (state == MENU_STATE.INFO_MENU) {
     draw_text(sx, sy, "LV " + string(_p.nivel));
     draw_text(sx + 150, sy, "HP " + string(_p.hp) + "/" + string(_p.hp_max));
     
-    var _atk_total = _p.ataque_base;
+    // Mostramos el ataque base limpio (ej. 0 o sumando solo el arma si aplica)
+    var _atk_visual = _p.ataque_base;
     if (_p.equipo_arma != -1 && variable_global_exists("equip_db")) {
         var _arma_data = global.equip_db[$ _p.equipo_arma];
         if (_arma_data != undefined && struct_exists(_arma_data, "ataque")) {
-            _atk_total += _arma_data.ataque;
+            _atk_visual += _arma_data.ataque;
         }
     }
-    draw_text(sx, sy + 50, "AT  " + string(_atk_total));
+    
+    draw_text(sx, sy + 50, "AT  " + string(_atk_visual));
     draw_text(sx + 150, sy + 50, "EXP: " + string(_p.exp_actual));
     
     var _def_total = _p.defensa_base;
@@ -348,7 +356,7 @@ else if (state == MENU_STATE.CONFIG_MENU || state == MENU_STATE.CONFIG_ACTION) {
     if (config_tab == 0) {
         var options_general = [
             { name: "Volumen General", val: string(round(master_volume * 100)) + "%" },
-            { name: "Pantalla Comp",   val: fullscreen_enabled ? "Si" : "No" },
+            { name: "Pantalla Comp",    val: fullscreen_enabled ? "Si" : "No" },
             { name: "Auto-correr",      val: global.autocorrer_enabled ? "Si" : "No" },
             { name: "Volver",           val: "" }
         ];

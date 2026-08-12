@@ -1,10 +1,21 @@
+// --- LIMPIEZA DE ENEMIGOS DESTRUIDOS (SOLO EN CAMBIOS DE MAPA REALES) ---
+if (!variable_global_exists("viajando_a_batalla") || !global.viajando_a_batalla) {
+    // Si cambiamos a una habitación normal (no batalla), reiniciamos el struct de enemigos destruidos
+    // asignándole una estructura vacía para que todos los enemigos vuelvan a nacer en los mapas.
+    global.enemigos_destruidos = {};
+} else {
+    // Si veníamos de la batalla, apagamos el indicador temporalmente para el próximo viaje
+    global.viajando_a_batalla = false;
+}
+
+// --- CAMBIO DE HABITACIÓN Y POSICIÓN DEL JUGADOR ---
 room_goto(target_rm);
 
 obj_player.x = target_x;
 obj_player.y = target_y;
 obj_player.face = target_face;
 
-// Si NO debemos conservar la música, hacemos el comportamiento normal (parar y poner la nueva con fade in)
+// --- GESTIÓN DE MÚSICA ---
 if (!keep_music) 
 {
     audio_stop_all();
@@ -16,6 +27,5 @@ if (!keep_music)
         audio_sound_gain(_new_audio, 1, 1000); 
     }
 }
-// Si keep_music es true, la música del pasillo_school sigue sonando de largo hacia toriel_salon sin cortarse.
 
 image_speed = -1;

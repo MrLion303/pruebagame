@@ -3,7 +3,7 @@ function scr_equips_data() {
         espada_basica: {
             nombre: "Espada palo",
             tipo: "arma", // arma o armadura
-            ataque: 5,
+            ataque: 3,
             defensa: 0,
             descripcion: "Una espada de madera inofensiva."
         },

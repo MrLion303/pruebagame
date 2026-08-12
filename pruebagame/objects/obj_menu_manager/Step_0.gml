@@ -1,3 +1,10 @@
+// --- BLOQUEO TOTAL DE APERTURA E INTERACCIÓN EN ROOMS ESPECÍFICAS ---
+var _room_actual = room_get_name(room);
+if (_room_actual == "bbs" || _room_actual == "rm_title") {
+    state = MENU_STATE.CLOSED; 
+    exit; // Detiene completamente la ejecución del Step del menú en estas rooms
+}
+
 // Abrir menú principal con C o Ctrl
 if (state == MENU_STATE.CLOSED) {
     if (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(vk_control)) {
