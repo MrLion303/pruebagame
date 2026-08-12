@@ -15,9 +15,10 @@ enum MENU_STATE {
     EQUIP_DROP_CONFIRM,
     
     INFO_MENU,        
-    CONFIG_MENU,      // Pestañas superiores (General / Controles)
-    CONFIG_ACTION,    // Opciones internas de la configuración
-    GAME_CLOSE_CONFIRM
+    CONFIG_MENU,      
+    CONFIG_ACTION,    
+    GAME_CLOSE_CONFIRM,
+    EXITING // <-- Nuevo estado para evitar que el menú interfiera durante la transición
 }
 
 state = MENU_STATE.CLOSED;
@@ -27,7 +28,7 @@ config_tab = 0;         // 0 = General, 1 = Controles
 config_index = -1;      // -1 = Seleccionando pestañas superiores; 0+ = Opciones internas
 master_volume = 1.0;    
 fullscreen_enabled = window_get_fullscreen(); 
-global.autocorrer_enabled = false; // <-- Ahora es global y persistente
+global.autocorrer_enabled = false;
 
 inventory = ["agua", -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
 inv_x = 0;

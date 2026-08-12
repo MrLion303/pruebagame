@@ -17,3 +17,4 @@ exp_siguiente = 100;
 // Slots de equipo activo (guardan la key del item, ej: "espada_basica" o -1 si está vacío)
 equipo_arma = -1;       
 equipo_armadura = -1;
+

@@ -10,7 +10,7 @@ if (state == MENU_STATE.CLOSED) {
     exit;
 }
 
-// Cerrar menú o retroceder con X o Shift
+// Cerrar menú o retroceder con X o Shift (Revertido a su comportamiento original)
 if (keyboard_check_pressed(ord("X")) || keyboard_check_pressed(vk_shift)) {
     if (state == MENU_STATE.MAIN) {
         state = MENU_STATE.CLOSED;
@@ -33,7 +33,7 @@ if (keyboard_check_pressed(ord("X")) || keyboard_check_pressed(vk_shift)) {
     } else if (state == MENU_STATE.EQUIP_DROP_CONFIRM) {
         state = MENU_STATE.EQUIP_ACTION;
     }
-    // Retrocesos para CONFIG
+    // Retrocesos para CONFIG (Original: Vuelve a las pestañas)
     else if (state == MENU_STATE.CONFIG_MENU) {
         state = MENU_STATE.MAIN;
     } else if (state == MENU_STATE.CONFIG_ACTION) {
@@ -379,7 +379,7 @@ switch (state) {
     // --- LÓGICA PARA CONFIG_ACTION (Opciones internas) ---
     case MENU_STATE.CONFIG_ACTION:
         var _moved_cfg_act = false;
-        var max_cfg_index = (config_tab == 0) ? 4 : 0;
+        var max_cfg_index = (config_tab == 0) ? 3 : 0; // 0: Volumen, 1: Pantalla Completa, 2: Auto-correr, 3: Volver
         
         if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) {
             config_index = min(config_index + 1, max_cfg_index);
@@ -422,7 +422,7 @@ switch (state) {
                     audio_play_sound(snd_menumove, 10, false);
                 }
             }
-            else if (config_index == 2) { // Auto-correr (Arreglado para modificar la global)
+            else if (config_index == 2) { // Auto-correr
                 if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D")) || 
                     keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A")) ||
                     keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
@@ -430,15 +430,10 @@ switch (state) {
                     audio_play_sound(snd_menumove, 10, false);
                 }
             }
-            else if (config_index == 3 && (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter))) {
+            else if (config_index == 3 && (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter))) { 
+                // Acción de "Volver" en pantalla: te regresa directo al menú principal (Inv, Equip, etc.)
                 audio_play_sound(snd_menumove, 10, false);
-                state = MENU_STATE.CLOSED;
-                room_goto(rm_title);
-            }
-            else if (config_index == 4 && (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter))) {
-                audio_play_sound(snd_menumove, 10, false);
-                state = MENU_STATE.CONFIG_MENU;
-                config_index = -1;
+                state = MENU_STATE.MAIN;
             }
         }
         break;

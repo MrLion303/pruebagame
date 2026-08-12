@@ -1,4 +1,4 @@
-if (state == MENU_STATE.CLOSED) exit;
+if (state == MENU_STATE.CLOSED || state == MENU_STATE.EXITING) exit;
 
 if (variable_global_exists("font_main")) {
     draw_set_font(global.font_main);
@@ -336,7 +336,7 @@ else if (state == MENU_STATE.CONFIG_MENU || state == MENU_STATE.CONFIG_ACTION) {
     draw_set_color(tab_gen_col);
     draw_text(cfg_box_x + 32, cfg_box_y + 21, "General");
     
-    // Pestaña Controles (Ampliud extendida hacia la derecha: de x+155 a x+310)
+    // Pestaña Controles (Ampliada hacia la derecha: de x+155 a x+310)
     draw_set_color(config_tab == 1 ? (is_on_tabs ? c_yellow : c_orange) : c_dkgray);
     draw_rectangle(cfg_box_x + 155, cfg_box_y + 14, cfg_box_x + 310, cfg_box_y + 50, true);
     draw_set_color(tab_ctrl_col);
@@ -350,11 +350,8 @@ else if (state == MENU_STATE.CONFIG_MENU || state == MENU_STATE.CONFIG_ACTION) {
             { name: "Volumen General", val: string(round(master_volume * 100)) + "%" },
             { name: "Pantalla Comp",   val: fullscreen_enabled ? "Si" : "No" },
             { name: "Auto-correr",      val: global.autocorrer_enabled ? "Si" : "No" },
-            { name: "Volumen al Titulo", val: "" },
             { name: "Volver",           val: "" }
         ];
-        
-        options_general[3].name = "Volumen al Titulo";
         
         for (var i = 0; i < array_length(options_general); i++) {
             var col_item = (!is_on_tabs && config_index == i) ? c_yellow : c_orange;
