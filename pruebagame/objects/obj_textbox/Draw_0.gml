@@ -1,7 +1,7 @@
 accept_key = keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter);
-skip_key = keyboard_check_pressed(ord("X")) || keyboard_check_pressed(vk_shift);
+skip_key = keyboard_check_pressed(ord("X")) || keyboard_check_pressed(vk_shift) || keyboard_check_pressed(vk_control);
 
-var _fast_skip_key = keyboard_check(ord("C"));
+var _fast_skip_key = keyboard_check(ord("C")) || keyboard_check(vk_control);
 var _is_decision = (variable_instance_exists(id, "page_number") && variable_instance_exists(id, "option_number") && option_number > 0 && page == page_number - 1);
 
 if (!variable_instance_exists(id, "page_number") || page_number <= 0) exit;

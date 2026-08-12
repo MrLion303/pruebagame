@@ -1,0 +1,249 @@
+// Abrir menú principal con C o Ctrl
+if (state == MENU_STATE.CLOSED) {
+    if (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(vk_control)) {
+        if (!instance_exists(obj_textbox)) {
+            state = MENU_STATE.MAIN;
+            main_index = 0;
+        }
+    }
+    exit;
+}
+
+// Cerrar menú o retroceder con X o Shift
+if (keyboard_check_pressed(ord("X")) || keyboard_check_pressed(vk_shift)) {
+    if (state == MENU_STATE.MAIN) {
+        state = MENU_STATE.CLOSED;
+    } else if (state == MENU_STATE.INVENTORY) {
+        state = MENU_STATE.MAIN;
+    } else if (state == MENU_STATE.ITEM_ACTION) {
+        state = MENU_STATE.INVENTORY;
+    } else if (state == MENU_STATE.ITEM_INFO) {
+        state = MENU_STATE.ITEM_ACTION;
+    } else if (state == MENU_STATE.ITEM_DROP_CONFIRM) {
+        state = MENU_STATE.ITEM_ACTION;
+    } 
+    // Retrocesos para EQUIP
+    else if (state == MENU_STATE.EQUIP_MENU) {
+        state = MENU_STATE.MAIN;
+    } else if (state == MENU_STATE.EQUIP_ACTION) {
+        state = MENU_STATE.EQUIP_MENU;
+    } else if (state == MENU_STATE.EQUIP_INFO) {
+        state = MENU_STATE.EQUIP_ACTION;
+    } else if (state == MENU_STATE.EQUIP_DROP_CONFIRM) {
+        state = MENU_STATE.EQUIP_ACTION;
+    }
+    // Retrocesos para INFO y CERRAR
+    else if (state == MENU_STATE.INFO_MENU) {
+        state = MENU_STATE.MAIN;
+    } else if (state == MENU_STATE.GAME_CLOSE_CONFIRM) {
+        state = MENU_STATE.MAIN;
+    }
+    exit;
+}
+
+// Lógica de navegación principal y submenús
+switch (state) {
+    case MENU_STATE.MAIN:
+        if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) main_index = (main_index + 1) % array_length(main_options);
+        if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) main_index = (main_index - 1 + array_length(main_options)) % array_length(main_options);
+        
+        if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
+            switch (main_index) {
+                case 0: // INV
+                    state = MENU_STATE.INVENTORY;
+                    inv_x = 0; inv_y = 0; inv_scroll = 0;
+                    break;
+                case 1: // EQUIP
+                    state = MENU_STATE.EQUIP_MENU;
+                    equip_x = 0; equip_y = 0; equip_scroll = 0;
+                    break;
+                case 2: // INFO
+                    state = MENU_STATE.INFO_MENU;
+                    break;
+                case 3: // OPC
+                    break;
+                case 4: // CERRAR
+                    state = MENU_STATE.GAME_CLOSE_CONFIRM;
+                    close_confirm_index = 1;
+                    break;
+            }
+        }
+        break;
+        
+    case MENU_STATE.INVENTORY:
+        if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D"))) inv_x = (inv_x + 1) % 3;
+        if (keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) inv_x = (inv_x - 1 + 3) % 3;
+        if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) {
+            if (inv_y < 2) {
+                inv_y++;
+            } else if (inv_scroll < 1) { 
+                inv_scroll++;
+            }
+        }
+        if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) {
+            if (inv_y > 0) {
+                inv_y--;
+            } else if (inv_scroll > 0) {
+                inv_scroll--;
+            }
+        }
+        
+        if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
+            var index = (inv_y + inv_scroll) * 3 + inv_x;
+            if (inventory[index] != -1) {
+                state = MENU_STATE.ITEM_ACTION;
+                action_index = 0;
+            }
+        }
+        break;
+        
+    case MENU_STATE.ITEM_ACTION:
+        if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D"))) action_index = (action_index + 1) % array_length(action_options);
+        if (keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) action_index = (action_index - 1 + array_length(action_options)) % array_length(action_options);
+        
+        if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
+            var slot_index = (inv_y + inv_scroll) * 3 + inv_x;
+            var current_item_key = inventory[slot_index];
+            var item_data = global.item_db[$ current_item_key];
+            
+            switch (action_index) {
+                case 0: // Usar
+                    if (item_data != undefined && item_data.efecto != undefined) {
+                        item_data.efecto();
+                        inventory[slot_index] = -1;
+                    }
+                    state = MENU_STATE.CLOSED;
+                    break;
+                case 1: // Tirar
+                    state = MENU_STATE.ITEM_DROP_CONFIRM;
+                    drop_confirm_index = 1;
+                    break;
+                case 2: // Info
+                    state = MENU_STATE.ITEM_INFO;
+                    break;
+            }
+        }
+        break;
+        
+    case MENU_STATE.ITEM_INFO:
+        if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
+            state = MENU_STATE.ITEM_ACTION;
+        }
+        break;
+        
+    case MENU_STATE.ITEM_DROP_CONFIRM:
+        if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D")) || keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) {
+            drop_confirm_index = (drop_confirm_index + 1) % 2;
+        }
+        if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
+            var slot_index = (inv_y + inv_scroll) * 3 + inv_x;
+            var current_item_key = inventory[slot_index];
+            var item_data = global.item_db[$ current_item_key];
+            var item_name = (item_data != undefined) ? item_data.nombre : "objeto";
+            
+            if (drop_confirm_index == 0) {
+                inventory[slot_index] = -1;
+                state = MENU_STATE.CLOSED;
+                var _textbox = instance_create_layer(x, y, layer, obj_textbox);
+                _textbox.text = ["Has tirado " + item_name + "."];
+                _textbox.page_number = array_length(_textbox.text);
+            } else {
+                state = MENU_STATE.INVENTORY;
+            }
+        }
+        break;
+
+    // --- LÓGICA PARA EQUIP (50 slots -> 17 filas, max scroll = 14) ---
+    case MENU_STATE.EQUIP_MENU:
+        if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D"))) equip_x = (equip_x + 1) % 3;
+        if (keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) equip_x = (equip_x - 1 + 3) % 3;
+        if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) {
+            if (equip_y < 2) {
+                equip_y++;
+            } else if (equip_scroll < 14) { 
+                equip_scroll++;
+            }
+        }
+        if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W"))) {
+            if (equip_y > 0) {
+                equip_y--;
+            } else if (equip_scroll > 0) {
+                equip_scroll--;
+            }
+        }
+        
+        if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
+            var eq_index = (equip_y + equip_scroll) * 3 + equip_x;
+            // Asegurarnos de no salirnos del límite del array de 50
+            if (eq_index < array_length(equipment) && equipment[eq_index] != -1) {
+                state = MENU_STATE.EQUIP_ACTION;
+                equip_action_index = 0;
+            }
+        }
+        break;
+        
+    case MENU_STATE.EQUIP_ACTION:
+        if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D"))) equip_action_index = (equip_action_index + 1) % array_length(equip_action_options);
+        if (keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) equip_action_index = (equip_action_index - 1 + array_length(equip_action_options)) % array_length(equip_action_options);
+        
+        if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
+            var eq_slot = (equip_y + equip_scroll) * 3 + equip_x;
+            var eq_key = equipment[eq_slot];
+            var eq_data = global.equip_db[$ eq_key];
+            
+            switch (equip_action_index) {
+                case 0: // Equipar
+                    state = MENU_STATE.CLOSED;
+                    break;
+                case 1: // Tirar
+                    state = MENU_STATE.EQUIP_DROP_CONFIRM;
+                    drop_confirm_index = 1;
+                    break;
+                case 2: // Info
+                    state = MENU_STATE.EQUIP_INFO;
+                    break;
+            }
+        }
+        break;
+        
+    case MENU_STATE.EQUIP_INFO:
+        if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
+            state = MENU_STATE.EQUIP_ACTION;
+        }
+        break;
+        
+    case MENU_STATE.EQUIP_DROP_CONFIRM:
+        if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D")) || keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) {
+            drop_confirm_index = (drop_confirm_index + 1) % 2;
+        }
+        if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
+            var eq_slot = (equip_y + equip_scroll) * 3 + equip_x;
+            var eq_key = equipment[eq_slot];
+            var eq_data = global.equip_db[$ eq_key];
+            var eq_name = (eq_data != undefined) ? eq_data.nombre : "equipamiento";
+            
+            if (drop_confirm_index == 0) {
+                equipment[eq_slot] = -1;
+                state = MENU_STATE.CLOSED;
+                var _textbox = instance_create_layer(x, y, layer, obj_textbox);
+                _textbox.text = ["Has tirado " + eq_name + "."];
+                _textbox.page_number = array_length(_textbox.text);
+            } else {
+                state = MENU_STATE.EQUIP_MENU;
+            }
+        }
+        break;
+        
+    case MENU_STATE.GAME_CLOSE_CONFIRM:
+        if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D")) || keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) {
+            close_confirm_index = (close_confirm_index + 1) % 2;
+        }
+        if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
+            if (close_confirm_index == 0) {
+                game_end();
+            } else {
+                state = MENU_STATE.MAIN;
+            }
+        }
+        break;
+}

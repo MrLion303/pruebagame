@@ -35,5 +35,5 @@
     "path":"sprites/spr_colision_rampa/spr_colision_rampa.yy",
   },
   "spriteMaskId":null,
-  "visible":true,
+  "visible":false,
 }

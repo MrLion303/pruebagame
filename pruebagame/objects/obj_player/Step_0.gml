@@ -1,8 +1,16 @@
 // Reiniciar movimiento
 movimiento = false;
 
-// Si NO existe el pauser Y TAMPOCO existe la caja de diálogo, permitir movimiento
-if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox))
+// Comprobación segura del estado del menú
+var _menu_abierto = false;
+if (instance_exists(obj_menu_manager)) {
+    if (obj_menu_manager.state != MENU_STATE.CLOSED) {
+        _menu_abierto = true;
+    }
+}
+
+// Si NO existe el pauser, Y TAMPOCO la caja de diálogo, Y EL MENÚ ESTÁ CERRADO, permitir movimiento
+if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox) && !_menu_abierto)
 {
     // Correr
     var _vel = 4;
