@@ -8,8 +8,9 @@ var _fade_transicion = 1.0;
 if (instance_exists(obj_transision_bbs)) { _fade_transicion = obj_transision_bbs.image_alpha; }
 var _alpha_final = alpha_aparicion * _fade_transicion;
 
-var _enemigo_x = (14 + 108) * _s; 
-var _enemigo_y = (35) * _s; 
+// --- POSICIÓN CORREGIDA SEGÚN TU CIRCULO ---
+var _enemigo_x = (14 + 145) * _s; // Movido a la izquierda
+var _enemigo_y = (65) * _s;        // Movido más abajo para que el centro coincida con el círculo
 
 if (!variable_instance_exists(id, "enemigo_img_index")) { enemigo_img_index = 0; }
 
@@ -17,14 +18,18 @@ if (!variable_instance_exists(id, "enemigo_img_index")) { enemigo_img_index = 0;
 var _enemigo_derrotado = (variable_struct_exists(enemigo, "derrotado") && enemigo.derrotado);
 
 if (_enemigo_derrotado) {
-    enemigo_img_index = 0; // Congela la animación en el primer frame
-    var _enemigo_color = make_color_rgb(40, 40, 40); // ¡Mucho más oscuro (casi sombra)! Puedes bajar los números a (20, 20, 20) si lo quieres casi negro.
+    enemigo_img_index = 0; 
+    var _enemigo_color = make_color_rgb(40, 40, 40); 
 } else {
-    enemigo_img_index += 0.1; // Animación normal en bucle
-    var _enemigo_color = c_white; // Color normal
+    enemigo_img_index += 0.1; 
+    var _enemigo_color = c_white; 
 }
 
-draw_sprite_ext(enemigo.sprite, enemigo_img_index, _enemigo_x, _enemigo_y, 2.0 * _s, 2.0 * _s, 0, _enemigo_color, _alpha_final);
+// Obtenemos la escala del struct
+var _escala_enemigo = variable_struct_exists(enemigo, "escala_sprite") ? enemigo.escala_sprite : 2.0;
+
+// Dibujamos con el origen centrado exactamente donde marcaste
+draw_sprite_ext(enemigo.sprite, enemigo_img_index, _enemigo_x, _enemigo_y, _escala_enemigo * _s, _escala_enemigo * _s, 0, _enemigo_color, _alpha_final);
 
 draw_sprite_ext(spr_bbs_textbox, 0, 14 * _s, 125 * _s, 5.666667 * _s, 1.0 * _s, 0, c_white, _alpha_final);
 if (variable_global_exists("font_main")) { draw_set_font(global.font_main); }

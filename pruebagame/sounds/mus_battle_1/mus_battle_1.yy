@@ -14,8 +14,8 @@
   "exportDir":"",
   "name":"mus_battle_1",
   "parent":{
-    "name":"MSistema de Batallas",
-    "path":"folders/MSistema de Batallas.yy",
+    "name":"musica de batalla",
+    "path":"folders/MSistema de Batallas/musica de batalla.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

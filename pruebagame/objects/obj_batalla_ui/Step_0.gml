@@ -7,13 +7,33 @@ var _fast_skip_key = keyboard_check(ord("C")) || keyboard_check_pressed(vk_contr
 
 // Control de animación manual para el sprite del enemigo si sigue vivo
 if (variable_struct_exists(enemigo, "derrotado") && enemigo.derrotado) {
-    // Si está derrotado, congelamos su animación en el primer frame
     enemigo.anim_index = 0; 
 } else {
-    // Si está vivo, avanzamos su animación de forma cíclica (ajusta la velocidad a tu gusto)
     if (variable_struct_exists(enemigo, "anim_index")) {
         enemigo.anim_index += 0.15; 
     }
+}
+
+// --- SI EL ENEMIGO YA FUE DERROTADO Y ESTÁ MOSTRANDO EL TEXTO DE MUERTE ---
+if (variable_struct_exists(enemigo, "derrotado") && enemigo.derrotado) {
+    if (draw_char < text_length) {
+        var _actual_speed = _fast_skip_key ? 999 : text_spd;
+        draw_char += _actual_speed;
+        draw_char = clamp(draw_char, 0, text_length);
+        if (skip_key || _fast_skip_key || accept_key) { draw_char = text_length; }
+    } else {
+        if (accept_key) {
+            if (variable_struct_exists(enemigo, "musica")) audio_stop_sound(enemigo.musica);
+            if (audio_is_playing(snd_bbs_start)) audio_stop_sound(snd_bbs_start);
+            
+            audio_resume_all();
+            
+            if (variable_global_exists("return_room")) room_goto(global.return_room);
+            else room_goto(pasillo_school);
+            instance_destroy();
+        }
+    }
+    exit; 
 }
 
 if (!en_menu_fight) {
@@ -43,7 +63,7 @@ if (draw_char < text_length) {
                 if (audio_is_playing(snd_bbs_start)) audio_stop_sound(snd_bbs_start);
                 
                 audio_resume_all();
-                audio_play_sound(snd_board_escaped, 10, false);
+                audio_play_sound(snd_board_escaped, 10, false); 
                 
                 if (variable_global_exists("return_room")) room_goto(global.return_room);
                 else room_goto(pasillo_school);
@@ -85,10 +105,21 @@ if (draw_char < text_length) {
                 
                 if (enemigo.vida_actual <= 0) {
                     enemigo.vida_actual = 0;
-                    enemigo.derrotado = true; // <-- Marcamos al enemigo como derrotado
-                    text_to_draw = "¡Venciste a " + enemigo.nombre + "!";
+                    enemigo.derrotado = true; 
+                    
+                    // Detenemos la música de batalla y reproducimos el sonido de muerte del enemigo
+                    if (variable_struct_exists(enemigo, "musica")) {
+                        audio_stop_sound(enemigo.musica);
+                    }
+                    audio_play_sound(snd_enemy_killed, 10, false); // <-- SONIDO AÑADIDO
+                    
+                    if (variable_struct_exists(enemigo, "texto_muerte")) {
+                        text_to_draw = string_replace_all(enemigo.texto_muerte, "\n", " ");
+                    } else {
+                        text_to_draw = "¡Venciste a " + enemigo.nombre + "!";
+                    }
                 } else {
-                    text_to_draw = "¡Hiciste " + string(_dano) + " de daño!";
+                    text_to_draw = "¡Hiciste " + string(_dano) + " de dano!";
                 }
                 
                 text_length = string_length(text_to_draw);

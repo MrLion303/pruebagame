@@ -14,8 +14,8 @@
   "exportDir":"",
   "name":"snd_board_escaped",
   "parent":{
-    "name":"MSistema de Batallas",
-    "path":"folders/MSistema de Batallas.yy",
+    "name":"Sonidos de batalla",
+    "path":"folders/MSistema de Batallas/Sonidos de batalla.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

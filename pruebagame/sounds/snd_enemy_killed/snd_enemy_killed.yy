@@ -1,6 +1,6 @@
 {
   "$GMSound":"v2",
-  "%Name":"snd_bbs_start",
+  "%Name":"snd_enemy_killed",
   "audioGroupId":{
     "name":"audiogroup_default",
     "path":"audiogroups/audiogroup_default",
@@ -10,9 +10,9 @@
   "compression":0,
   "compressionQuality":4,
   "conversionMode":0,
-  "duration":1.0714285,
+  "duration":1.0990477,
   "exportDir":"",
-  "name":"snd_bbs_start",
+  "name":"snd_enemy_killed",
   "parent":{
     "name":"Sonidos de batalla",
     "path":"folders/MSistema de Batallas/Sonidos de batalla.yy",
@@ -21,6 +21,6 @@
   "resourceType":"GMSound",
   "resourceVersion":"2.0",
   "sampleRate":44100,
-  "soundFile":"snd_bbs_start.wav",
+  "soundFile":"snd_enemy_killed.wav",
   "volume":1.0,
 }
