@@ -1,15 +1,4 @@
-// ==========================================
-// TRANSICIÓN DE SALIDA DE BATALLA
-// ==========================================
-
-depth = -10000;
-
-// Mantener la transición al cambiar de room
-persistent = true;
-
-// Animación
-image_speed = 0.5;
-image_index = 0;
-
-// Control para evitar ejecutar el cambio de room varias veces
-fase_salida = false;
+depth = -10000; // Por encima de todo
+image_speed = 0.5; // Animación suave
+image_index = 0; // Empieza desde el frame 0 (transparente cerrándose en la room de batalla)
+fase_salida = false; // Bandera para controlar el cambio de room a mitad de camino

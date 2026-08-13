@@ -12,7 +12,7 @@ enum FASE_BATALLA {
 fase_actual = FASE_BATALLA.INICIO;
 
 if (!variable_global_exists("enemigo_actual_id")) {
-    global.enemigo_actual_id = "variante 1"; 
+    global.enemigo_actual_id = "variante 1";
 }
 
 var _datos_variante = scr_enemigos_data(global.enemigo_actual_id);
