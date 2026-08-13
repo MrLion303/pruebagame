@@ -3,7 +3,7 @@ if (esta_activo) {
 
     if (_p != noone) {
         // Verificar que no exista ya una transicion corriendo
-        if (!instance_exists(obj_transision_bbs)) {
+        if (!instance_exists(obj_transicion_bbs)) {
             
             // --- CONGELAR AL JUGADOR ---
             if (variable_instance_exists(_p, "can_move")) {
@@ -36,7 +36,7 @@ if (esta_activo) {
             audio_play_sound(snd_bbs_start, 10, false);
             
             // Creamos la transicion
-            instance_create_layer(0, 0, layer, obj_transision_bbs);
+            instance_create_layer(0, 0, layer, obj_transicion_bbs);
             
             // Destruimos esta instancia específica del mapa para que desaparezca LITERALMENTE
             instance_destroy(); 

@@ -2,7 +2,7 @@
 var _room_actual = room_get_name(room);
 if (_room_actual == "bbs" || _room_actual == "rm_title") {
     state = MENU_STATE.CLOSED; 
-    exit; // Detiene completamente la ejecución del Step del menú en estas rooms
+    exit; 
 }
 
 // Abrir menú principal con C o Ctrl
@@ -17,7 +17,7 @@ if (state == MENU_STATE.CLOSED) {
     exit;
 }
 
-// Cerrar menú o retroceder con X o Shift (Revertido a su comportamiento original)
+// Cerrar menú o retroceder con X o Shift
 if (keyboard_check_pressed(ord("X")) || keyboard_check_pressed(vk_shift)) {
     if (state == MENU_STATE.MAIN) {
         state = MENU_STATE.CLOSED;
@@ -40,12 +40,12 @@ if (keyboard_check_pressed(ord("X")) || keyboard_check_pressed(vk_shift)) {
     } else if (state == MENU_STATE.EQUIP_DROP_CONFIRM) {
         state = MENU_STATE.EQUIP_ACTION;
     }
-    // Retrocesos para CONFIG (Original: Vuelve a las pestañas)
+    // Retrocesos para CONFIG
     else if (state == MENU_STATE.CONFIG_MENU) {
         state = MENU_STATE.MAIN;
     } else if (state == MENU_STATE.CONFIG_ACTION) {
         state = MENU_STATE.CONFIG_MENU;
-        config_index = -1; // Regresa el foco a las pestañas
+        config_index = -1; 
     }
     // Retrocesos para STAD y CERRAR
     else if (state == MENU_STATE.INFO_MENU) {
@@ -90,7 +90,7 @@ switch (state) {
                 case 3: // CONFIG
                     state = MENU_STATE.CONFIG_MENU;
                     config_tab = 0;
-                    config_index = -1; // Empieza seleccionando pestañas superiores
+                    config_index = -1; 
                     break;
                 case 4: // CERRAR
                     state = MENU_STATE.GAME_CLOSE_CONFIRM;
@@ -134,13 +134,15 @@ switch (state) {
         
         if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
             var index = (inv_y + inv_scroll) * 3 + inv_x;
-            if (inventory[index] != -1) {
-                audio_play_sound(snd_menumove, 10, false);
-                state = MENU_STATE.ITEM_ACTION;
-                action_index = 0;
-            } else {
-                if (audio_is_playing(snd_error)) audio_stop_sound(snd_error);
-                audio_play_sound(snd_error, 10, false);
+            if (instance_exists(obj_player) && index < array_length(obj_player.inventory)) {
+                if (obj_player.inventory[index] != -1) {
+                    audio_play_sound(snd_menumove, 10, false);
+                    state = MENU_STATE.ITEM_ACTION;
+                    action_index = 0;
+                } else {
+                    if (audio_is_playing(snd_error)) audio_stop_sound(snd_error);
+                    audio_play_sound(snd_error, 10, false);
+                }
             }
         }
         break;
@@ -162,24 +164,27 @@ switch (state) {
         if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
             audio_play_sound(snd_menumove, 10, false);
             var slot_index = (inv_y + inv_scroll) * 3 + inv_x;
-            var current_item_key = inventory[slot_index];
-            var item_data = global.item_db[$ current_item_key];
             
-            switch (action_index) {
-                case 0: // Usar
-                    if (item_data != undefined && item_data.efecto != undefined) {
-                        item_data.efecto();
-                        inventory[slot_index] = -1;
-                    }
-                    state = MENU_STATE.CLOSED;
-                    break;
-                case 1: // Tirar
-                    state = MENU_STATE.ITEM_DROP_CONFIRM;
-                    drop_confirm_index = 1;
-                    break;
-                case 2: // Info
-                    state = MENU_STATE.ITEM_INFO;
-                    break;
+            if (instance_exists(obj_player) && slot_index < array_length(obj_player.inventory)) {
+                var current_item_key = obj_player.inventory[slot_index];
+                var item_data = global.item_db[$ current_item_key];
+                
+                switch (action_index) {
+                    case 0: // Usar
+                        if (item_data != undefined && item_data.efecto != undefined) {
+                            item_data.efecto();
+                            obj_player.inventory[slot_index] = -1;
+                        }
+                        state = MENU_STATE.CLOSED;
+                        break;
+                    case 1: // Tirar
+                        state = MENU_STATE.ITEM_DROP_CONFIRM;
+                        drop_confirm_index = 1;
+                        break;
+                    case 2: // Info
+                        state = MENU_STATE.ITEM_INFO;
+                        break;
+                }
             }
         }
         break;
@@ -199,18 +204,21 @@ switch (state) {
         if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
             audio_play_sound(snd_menumove, 10, false);
             var slot_index = (inv_y + inv_scroll) * 3 + inv_x;
-            var current_item_key = inventory[slot_index];
-            var item_data = global.item_db[$ current_item_key];
-            var item_name = (item_data != undefined) ? item_data.nombre : "objeto";
             
-            if (drop_confirm_index == 0) {
-                inventory[slot_index] = -1;
-                state = MENU_STATE.CLOSED;
-                var _textbox = instance_create_layer(x, y, layer, obj_textbox);
-                _textbox.text = ["Has tirado " + item_name + "."];
-                _textbox.page_number = array_length(_textbox.text);
-            } else {
-                state = MENU_STATE.INVENTORY;
+            if (instance_exists(obj_player) && slot_index < array_length(obj_player.inventory)) {
+                var current_item_key = obj_player.inventory[slot_index];
+                var item_data = global.item_db[$ current_item_key];
+                var item_name = (item_data != undefined) ? item_data.nombre : "objeto";
+                
+                if (drop_confirm_index == 0) {
+                    obj_player.inventory[slot_index] = -1;
+                    state = MENU_STATE.CLOSED;
+                    var _textbox = instance_create_layer(x, y, layer, obj_textbox);
+                    _textbox.text = ["Has tirado " + item_name + "."];
+                    _textbox.page_number = array_length(_textbox.text);
+                } else {
+                    state = MENU_STATE.INVENTORY;
+                }
             }
         }
         break;
@@ -362,31 +370,28 @@ switch (state) {
         }
         break;
 
-    // --- LÓGICA PARA CONFIG (Pestañas superiores) ---
+    // --- LÓGICA PARA CONFIG ---
     case MENU_STATE.CONFIG_MENU:
         var _moved_cfg = false;
-        
         if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D")) || 
             keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A"))) {
             config_tab = (config_tab + 1) % 2;
             _moved_cfg = true;
         }
-        
         if (_moved_cfg) {
             audio_play_sound(snd_menumove, 10, false);
         }
         
         if (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
             audio_play_sound(snd_menumove, 10, false);
-            config_index = 0; // Entra a las opciones internas
+            config_index = 0; 
             state = MENU_STATE.CONFIG_ACTION;
         }
         break;
         
-    // --- LÓGICA PARA CONFIG_ACTION (Opciones internas) ---
     case MENU_STATE.CONFIG_ACTION:
         var _moved_cfg_act = false;
-        var max_cfg_index = (config_tab == 0) ? 3 : 0; // 0: Volumen, 1: Pantalla Completa, 2: Auto-correr, 3: Volver
+        var max_cfg_index = (config_tab == 0) ? 3 : 0; 
         
         if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S"))) {
             config_index = min(config_index + 1, max_cfg_index);
@@ -396,15 +401,13 @@ switch (state) {
             config_index = max(config_index - 1, 0);
             _moved_cfg_act = true;
         }
-        
         if (_moved_cfg_act) {
             audio_play_sound(snd_menumove, 10, false);
         }
         
         if (config_tab == 0) {
-            if (config_index == 0) { // Volumen General
+            if (config_index == 0) { 
                 var _vol_changed = false;
-                
                 if (keyboard_check(vk_right) || keyboard_check(ord("D"))) {
                     master_volume = min(master_volume + 0.02, 1.0);
                     audio_master_gain(master_volume);
@@ -415,12 +418,11 @@ switch (state) {
                     audio_master_gain(master_volume);
                     _vol_changed = true;
                 }
-                
                 if (_vol_changed && !audio_is_playing(snd_menumove)) {
                     audio_play_sound(snd_menumove, 10, false);
                 }
             }
-            else if (config_index == 1) { // Pantalla Completa
+            else if (config_index == 1) { 
                 if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D")) || 
                     keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A")) ||
                     keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
@@ -429,7 +431,7 @@ switch (state) {
                     audio_play_sound(snd_menumove, 10, false);
                 }
             }
-            else if (config_index == 2) { // Auto-correr
+            else if (config_index == 2) { 
                 if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D")) || 
                     keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A")) ||
                     keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter)) {
@@ -438,7 +440,6 @@ switch (state) {
                 }
             }
             else if (config_index == 3 && (keyboard_check_pressed(ord("Z")) || keyboard_check_pressed(vk_enter))) { 
-                // Acción de "Volver" en pantalla: te regresa directo al menú principal (Inv, Equip, etc.)
                 audio_play_sound(snd_menumove, 10, false);
                 state = MENU_STATE.MAIN;
             }

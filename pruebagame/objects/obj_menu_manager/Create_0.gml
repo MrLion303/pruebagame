@@ -18,7 +18,7 @@ enum MENU_STATE {
     CONFIG_MENU,      
     CONFIG_ACTION,    
     GAME_CLOSE_CONFIRM,
-    EXITING // <-- Nuevo estado para evitar que el menú interfiera durante la transición
+    EXITING 
 }
 
 state = MENU_STATE.CLOSED;
@@ -30,7 +30,13 @@ master_volume = 1.0;
 fullscreen_enabled = window_get_fullscreen(); 
 global.autocorrer_enabled = false;
 
-inventory = ["agua", -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+// Sincronizamos el inventario con obj_player. Se inicializa allí si no existe.
+if (instance_exists(obj_player)) {
+    if (!variable_instance_exists(obj_player, "inventory")) {
+        obj_player.inventory = ["agua", -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
+    }
+}
+
 inv_x = 0;
 inv_y = 0;
 inv_scroll = 0; 

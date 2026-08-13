@@ -10,7 +10,7 @@ if (instance_exists(obj_menu_manager)) {
 }
 
 // === CONDICIÓN MAESTRA DE MOVIMIENTO ===
-if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox) && !_menu_abierto && !instance_exists(obj_transision_bbs) && room != bbs && puede_moverse)
+if (!instance_exists(obj_pauser) && !instance_exists(obj_textbox) && !_menu_abierto && !instance_exists(obj_transicion_bbs) && room != bbs && puede_moverse)
 {
     // Lógica exacta de Auto-correr
     var _vel = 4;

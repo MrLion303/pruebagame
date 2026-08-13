@@ -1,7 +1,6 @@
-// --- NUEVO: BLOQUEO DE MENÚ EN ROOMS ESPECÍFICAS ---
 var _room_actual = room_get_name(room);
 if (_room_actual == "bbs" || _room_actual == "rm_title") {
-    exit; // Si estamos en bbs o rm_title, no dibuja absolutamente nada del menú
+    exit; 
 }
 
 if (state == MENU_STATE.CLOSED || state == MENU_STATE.EXITING) exit;
@@ -52,7 +51,6 @@ if (state == MENU_STATE.GAME_CLOSE_CONFIRM) {
         var btn_x = close_box_x + (close_box_w / 2) + ((c - 0.5) * spacing);
         draw_text(btn_x, close_box_y + 65, options_close[c]);
     }
-    
     draw_set_halign(fa_left);
 }
 // CASO B: Menú STAD (Estadísticas)
@@ -67,15 +65,12 @@ else if (state == MENU_STATE.INFO_MENU) {
     
     var sx = info_box_x + 24;
     var sy = info_box_y + 24;
-    
     var _p = obj_player; 
     
     draw_set_color(c_orange);
-    
     draw_text(sx, sy, "LV " + string(_p.nivel));
     draw_text(sx + 150, sy, "HP " + string(_p.hp) + "/" + string(_p.hp_max));
     
-    // Mostramos el ataque base limpio (ej. 0 o sumando solo el arma si aplica)
     var _atk_visual = _p.ataque_base;
     if (_p.equipo_arma != -1 && variable_global_exists("equip_db")) {
         var _arma_data = global.equip_db[$ _p.equipo_arma];
@@ -111,7 +106,7 @@ else if (state == MENU_STATE.INFO_MENU) {
     }
     draw_text(sx, sy + 210, "Armadura: " + _nombre_armadura);
 }
-// CASO C: INVENTARIO DE CURACIÓN
+// CASO C: INVENTARIO DE CURACIÓN (Leyendo de obj_player.inventory)
 else if (state >= MENU_STATE.INVENTORY && state <= MENU_STATE.ITEM_DROP_CONFIRM) {
     draw_set_halign(fa_left);
     var inv_box_x = m_x + m_w + 12;
@@ -137,8 +132,8 @@ else if (state >= MENU_STATE.INVENTORY && state <= MENU_STATE.ITEM_DROP_CONFIRM)
                 draw_rectangle(cx - 4, cy - 4, cx + cell_w - 18, cy + cell_h - 10, true);
             }
             
-            if (index < array_length(inventory)) {
-                var item_key = inventory[index];
+            if (instance_exists(obj_player) && index < array_length(obj_player.inventory)) {
+                var item_key = obj_player.inventory[index];
                 if (item_key != -1) {
                     var item = global.item_db[$ item_key];
                     draw_set_color(c_orange);
@@ -179,14 +174,16 @@ else if (state >= MENU_STATE.INVENTORY && state <= MENU_STATE.ITEM_DROP_CONFIRM)
         draw_text(box_inf_x + 16, box_inf_y + 65, "Z: Selecc | X: Volver");
     } 
     else if (state == MENU_STATE.ITEM_INFO) {
-        var inv_index = min((inv_y + inv_scroll) * 3 + inv_x, array_length(inventory) - 1);
-        var selected_item_key = inventory[inv_index];
-        var item_info = global.item_db[$ selected_item_key];
-        
-        draw_set_color(c_yellow);
-        draw_text(box_inf_x + 16, box_inf_y + 16, item_info.nombre);
-        draw_set_color(c_white);
-        draw_text_ext(box_inf_x + 16, box_inf_y + 45, item_info.descripcion, 25, 280);
+        if (instance_exists(obj_player)) {
+            var inv_index = min((inv_y + inv_scroll) * 3 + inv_x, array_length(obj_player.inventory) - 1);
+            var selected_item_key = obj_player.inventory[inv_index];
+            var item_info = global.item_db[$ selected_item_key];
+            
+            draw_set_color(c_yellow);
+            draw_text(box_inf_x + 16, box_inf_y + 16, item_info.nombre);
+            draw_set_color(c_white);
+            draw_text_ext(box_inf_x + 16, box_inf_y + 45, item_info.descripcion, 25, 280);
+        }
     }
     else if (state == MENU_STATE.ITEM_DROP_CONFIRM) {
         draw_set_halign(fa_center);
@@ -206,14 +203,16 @@ else if (state >= MENU_STATE.INVENTORY && state <= MENU_STATE.ITEM_DROP_CONFIRM)
         draw_set_halign(fa_left);
     }
     else {
-        var inv_index = min((inv_y + inv_scroll) * 3 + inv_x, array_length(inventory) - 1);
-        var selected_item_key = inventory[inv_index];
-        draw_set_color(c_white);
-        if (selected_item_key != -1) {
-            var item_info = global.item_db[$ selected_item_key];
-            draw_text_ext(box_inf_x + 16, box_inf_y + 20, item_info.descripcion, 25, 280);
-        } else {
-            draw_text(box_inf_x + 16, box_inf_y + 25, "Espacio vacio.");
+        if (instance_exists(obj_player)) {
+            var inv_index = min((inv_y + inv_scroll) * 3 + inv_x, array_length(obj_player.inventory) - 1);
+            var selected_item_key = obj_player.inventory[inv_index];
+            draw_set_color(c_white);
+            if (selected_item_key != -1) {
+                var item_info = global.item_db[$ selected_item_key];
+                draw_text_ext(box_inf_x + 16, box_inf_y + 20, item_info.descripcion, 25, 280);
+            } else {
+                draw_text(box_inf_x + 16, box_inf_y + 25, "Espacio vacio.");
+            }
         }
     }
 }
@@ -323,7 +322,7 @@ else if (state >= MENU_STATE.EQUIP_MENU && state <= MENU_STATE.EQUIP_DROP_CONFIR
         }
     }
 }
-// CASO E: MENÚ CONFIG (Pestaña Controles más ancha hacia la derecha)
+// CASO E: MENÚ CONFIG
 else if (state == MENU_STATE.CONFIG_MENU || state == MENU_STATE.CONFIG_ACTION) {
     draw_set_halign(fa_left);
     var cfg_box_x = m_x + m_w + 12;
@@ -338,13 +337,11 @@ else if (state == MENU_STATE.CONFIG_MENU || state == MENU_STATE.CONFIG_ACTION) {
     var tab_gen_col = (config_tab == 0) ? c_yellow : c_white;
     var tab_ctrl_col = (config_tab == 1) ? c_yellow : c_white;
     
-    // Pestaña General
     draw_set_color(config_tab == 0 ? (is_on_tabs ? c_yellow : c_orange) : c_dkgray);
     draw_rectangle(cfg_box_x + 20, cfg_box_y + 14, cfg_box_x + 145, cfg_box_y + 50, true);
     draw_set_color(tab_gen_col);
     draw_text(cfg_box_x + 32, cfg_box_y + 21, "General");
     
-    // Pestaña Controles (Ampliada hacia la derecha: de x+155 a x+310)
     draw_set_color(config_tab == 1 ? (is_on_tabs ? c_yellow : c_orange) : c_dkgray);
     draw_rectangle(cfg_box_x + 155, cfg_box_y + 14, cfg_box_x + 310, cfg_box_y + 50, true);
     draw_set_color(tab_ctrl_col);
